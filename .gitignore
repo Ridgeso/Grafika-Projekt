@@ -4,7 +4,13 @@
 # binaries
 x86
 x64
+
+**/vc_mswu/**
+**/vc_mswu[A-Za-z]*/**
 **/vc_x64_mswu/**
-**/vc_x64_mswud/**
+**/vc_x64_mswu[A-Za-z]*/**
+
+**/vc_lib/**
+**/vc_dll/**
 **/vc_x64_lib/**
-wxWidgets
+**/vc_x64_dll/**
