@@ -1,0 +1,10 @@
+# vs
+.vs
+
+# binaries
+x86
+x64
+**/vc_x64_mswu/**
+**/vc_x64_mswud/**
+**/vc_x64_lib/**
+wxWidgets
