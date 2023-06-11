@@ -1,0 +1,10 @@
+1: Wczytywanie danych, obs³uga jak najwiêkszej liczby formatów plików:
+	- Obrazy zakodowany
+	- Obrazy kodowany
+2: Kodowanie:
+	- Metoda steganograficzna
+	- Metoda kryptograficzna
+3: Wyœwietlenie:
+	- Zakodowanego pliku
+	- Kodowanego pliku
+4: Zapisywanie do plików w formacie bezstratnym

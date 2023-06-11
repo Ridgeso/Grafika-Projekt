@@ -18,19 +18,22 @@
     <ClCompile Include="HiddenPhoto.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="HiddenPhotoFrame.cpp">
+    <ClCompile Include="src\HiddenPhotoFrame.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="HPpch.cpp">
+    <ClCompile Include="src\HPpch.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="HiddenPhotoFrame.h">
+    <ClInclude Include="src\HiddenPhotoFrame.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="HPpch.h">
+    <ClInclude Include="src\HPpch.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="TODO.txt" />
   </ItemGroup>
 </Project>
