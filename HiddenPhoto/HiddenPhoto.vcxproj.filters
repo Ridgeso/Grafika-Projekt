@@ -15,7 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="HiddenPhoto.cpp">
+    <ClCompile Include="src\HiddenPhoto.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\HiddenPhotoFrame.cpp">
@@ -24,12 +24,18 @@
     <ClCompile Include="src\HPpch.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Cryptor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\HiddenPhotoFrame.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\HPpch.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Cryptor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

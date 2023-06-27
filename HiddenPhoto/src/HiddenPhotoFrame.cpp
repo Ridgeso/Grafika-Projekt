@@ -1,4 +1,7 @@
 #include "HPpch.h"
+
+#include <wx/filedlg.h>
+
 #include "HiddenPhotoFrame.h"
 
 const wxSize HiddenPhotoFrame::s_MinWindowSize = { 1280, 720};
@@ -7,6 +10,9 @@ HiddenPhotoFrame::HiddenPhotoFrame()
     : wxFrame(nullptr, ID_HiddenPhoto, "Hidden Photo | Graphics Lab Project"),
     m_SteganoImage(), m_KryptoImage{}
 {
+    m_PhotoManager = std::make_unique<Cryptor::PhotoManager>();
+    m_CryptionManager= std::make_unique<Cryptor::CryptionManager>();
+
     SetIcon(wxNullIcon);
 
     // Layout
@@ -15,7 +21,7 @@ HiddenPhotoFrame::HiddenPhotoFrame()
     SetAutoLayout(true);
 
     m_BS_ToolBox = new wxBoxSizer(wxVERTICAL);
-    m_BS_MainLayout->Add(m_BS_ToolBox, 0, wxEXPAND| wxALL, 5);
+    m_BS_MainLayout->Add(m_BS_ToolBox, 0, wxEXPAND | wxALL, 5);
 
     m_CB_EncryptDecrypt = new wxCheckBox(
         this,
@@ -97,29 +103,31 @@ HiddenPhotoFrame::HiddenPhotoFrame()
     Bind(wxEVT_BUTTON, &HiddenPhotoFrame::OnLoadImages, this, ID_BT_LoadImage);
     Bind(wxEVT_BUTTON, &HiddenPhotoFrame::OnStartEncryption, this, ID_BT_StartEncryption);
     Bind(wxEVT_BUTTON, &HiddenPhotoFrame::OnSaveToFile, this, ID_BT_SaveToFile);
+
+    wxInitAllImageHandlers();
 }
 
-void HiddenPhotoFrame::OnExit(wxCommandEvent& e)
+void HiddenPhotoFrame::OnExit(wxCommandEvent& event)
 {
     Close(true);
 }
 
-void HiddenPhotoFrame::OnEncryptionDecryptionChange(wxCommandEvent& e)
+void HiddenPhotoFrame::OnEncryptionDecryptionChange(wxCommandEvent& event)
 {
 }
 
-void HiddenPhotoFrame::OnEbcryptionTypeChange(wxCommandEvent& e)
+void HiddenPhotoFrame::OnEbcryptionTypeChange(wxCommandEvent& event)
 {
 }
 
-void HiddenPhotoFrame::OnLoadImages(wxCommandEvent& e)
+void HiddenPhotoFrame::OnLoadImages(wxCommandEvent& event)
 {
 }
 
-void HiddenPhotoFrame::OnStartEncryption(wxCommandEvent& e)
+void HiddenPhotoFrame::OnStartEncryption(wxCommandEvent& event)
 {
 }
 
-void HiddenPhotoFrame::OnSaveToFile(wxCommandEvent& e)
+void HiddenPhotoFrame::OnSaveToFile(wxCommandEvent& event)
 {
 }

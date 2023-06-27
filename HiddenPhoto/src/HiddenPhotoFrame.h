@@ -7,19 +7,21 @@
 #include <wx/clipbrd.h>
 #include <wx/file.h>
 
+#include "Cryptor.h"
+
 class HiddenPhotoFrame : public wxFrame
 {
 public:
     HiddenPhotoFrame();
 
 private:
-    void OnExit(wxCommandEvent& e);
+    void OnExit(wxCommandEvent& event);
 
-    void OnEncryptionDecryptionChange(wxCommandEvent& e);
-    void OnEbcryptionTypeChange(wxCommandEvent& e);
-    void OnLoadImages(wxCommandEvent& e);
-    void OnStartEncryption(wxCommandEvent& e);
-    void OnSaveToFile(wxCommandEvent& e);
+    void OnEncryptionDecryptionChange(wxCommandEvent& event);
+    void OnEbcryptionTypeChange(wxCommandEvent& event);
+    void OnLoadImages(wxCommandEvent& event);
+    void OnStartEncryption(wxCommandEvent& event);
+    void OnSaveToFile(wxCommandEvent& event);
 
 private:
     enum EntityID
@@ -52,6 +54,9 @@ private:
 
     wxImage m_SteganoImage;
     std::array<wxImage, 2> m_KryptoImage;
+
+    std::unique_ptr<Cryptor::PhotoManager> m_PhotoManager;
+    std::unique_ptr<Cryptor::CryptionManager> m_CryptionManager;
 
     static const wxSize s_MinWindowSize;
 };
