@@ -14,22 +14,42 @@ namespace Cryptor
 	{
 	}
 
-	void PhotoManager::SetSteganografImage(wxImage&& newSteganograf, bool decryptEncrypt)
+	const wxImage& PhotoManager::GetSteganografImage() const
+	{
+		return m_EncryptSteganografImage;
+	}
+
+	const wxImage& PhotoManager::GetSteganografDecryptImage() const
+	{
+		return m_DecryptSteganografImage;
+	}
+
+	void PhotoManager::SetSteganografImage(const wxImage& newSteganograf, bool decryptEncrypt)
 	{
 		if (decryptEncrypt)
-			m_DecryptSteganografImage = std::move(newSteganograf);
+			m_EncryptSteganografImage = newSteganograf;
 		else
-			m_EncryptSteganografImage = std::move(newSteganograf);
+			m_DecryptSteganografImage = newSteganograf;
 	}
 
-	void PhotoManager::SetKryptografImage(wxImage&& newKryptograf)
+	const wxImage& PhotoManager::GetKryptografImage() const
 	{
-		m_DecryptKryptografImage = std::move(newKryptograf);
+		return m_EncryptKryptografImage;
 	}
 
-	void PhotoManager::SetKryptografImage(wxImage&& newKryptografFisrt, wxImage&& newKryptografSecond)
+	const std::pair<wxImage, wxImage>& PhotoManager::GetKryptografDecryptImage() const
 	{
-		m_EncryptKryptografImage = std::make_pair(std::move(newKryptografFisrt), std::move(newKryptografSecond));
+		return m_DecryptKryptografImage;
+	}
+
+	void PhotoManager::SetKryptografImage(const wxImage& newKryptograf)
+	{
+		m_EncryptKryptografImage = newKryptograf;
+	}
+
+	void PhotoManager::SetKryptografImage(const wxImage& newKryptografFisrt, const wxImage& newKryptografSecond)
+	{
+		m_DecryptKryptografImage = std::make_pair(newKryptografFisrt, newKryptografSecond);
 	}
 
 	uint8_t* PhotoManager::GetRealSteganografData()

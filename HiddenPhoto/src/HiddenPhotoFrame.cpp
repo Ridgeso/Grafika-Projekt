@@ -26,7 +26,7 @@ HiddenPhotoFrame::HiddenPhotoFrame()
     m_CB_EncryptDecrypt = new wxCheckBox(
         this,
         ID_CB_EncryptDecrypt,
-        _("Kodowanie"),
+        _("Dekodowanie"),
         wxPoint(0, 0),
         wxSize(75, 30),
         0,
@@ -47,6 +47,7 @@ HiddenPhotoFrame::HiddenPhotoFrame()
         wxDefaultValidator,
         _("m_CBShapes")
     );
+    m_CO_EncryptionType->SetSelection(0);
     m_BS_ToolBox->Add(m_CO_EncryptionType, 0, wxALIGN_CENTER | wxALL, 5);
     
     m_BT_LoadImage = new wxButton(
@@ -122,6 +123,39 @@ void HiddenPhotoFrame::OnEbcryptionTypeChange(wxCommandEvent& event)
 
 void HiddenPhotoFrame::OnLoadImages(wxCommandEvent& event)
 {
+    wxImage image;
+    OpenImage(&image);
+    if (!image.IsOk())
+        return;
+
+    switch (m_CO_EncryptionType->GetSelection())
+    {
+        case wxNOT_FOUND:
+        {
+            wxMessageBox(wxT("Nieprawid³owy typ kodowania."), "Error", wxOK | wxICON_ERROR);
+            break;
+        }
+        case EncryptionType::Steganograficzna:
+        {
+            m_PhotoManager->SetSteganografImage(image, !m_CB_EncryptDecrypt->GetValue());
+            break;
+        }
+        case EncryptionType::Kryptograficzna:
+        {
+            if (!m_CB_EncryptDecrypt->GetValue())
+                m_PhotoManager->SetKryptografImage(image);
+            else
+            {
+                wxImage encrypted2;
+                OpenImage(&encrypted2);
+
+                m_PhotoManager->SetKryptografImage(image, encrypted2);
+            }
+            break;
+        }
+    }
+
+    Repaint();
 }
 
 void HiddenPhotoFrame::OnStartEncryption(wxCommandEvent& event)
@@ -130,4 +164,71 @@ void HiddenPhotoFrame::OnStartEncryption(wxCommandEvent& event)
 
 void HiddenPhotoFrame::OnSaveToFile(wxCommandEvent& event)
 {
+}
+
+void HiddenPhotoFrame::Repaint()
+{
+    wxClientDC dc(m_P_Picture);
+    m_P_Picture->PrepareDC(dc);
+    wxImage image;
+
+    switch (m_CO_EncryptionType->GetSelection())
+    {
+        case wxNOT_FOUND:
+        {
+            wxMessageBox(wxT("Nieprawid³owy typ kodowania."), "Error", wxOK | wxICON_ERROR);
+            break;
+        }
+        case EncryptionType::Steganograficzna:
+        {
+            image = m_CB_EncryptDecrypt->GetValue() ?
+                m_PhotoManager->GetSteganografDecryptImage()
+                :
+                m_PhotoManager->GetSteganografImage();
+            break;
+        }
+        case EncryptionType::Kryptograficzna:
+        {
+            if (m_CB_EncryptDecrypt->GetValue())
+            {
+                const auto& [decrypt1, decrypt2] = m_PhotoManager->GetKryptografDecryptImage();
+                image = decrypt1;
+
+                wxBitmap bitmap(decrypt2);
+                dc.DrawBitmap(bitmap, s_MinWindowSize.x / 2, 0, true);
+            }
+            else
+                image = m_PhotoManager->GetKryptografImage();
+            break;
+        }
+
+    }
+
+    wxBitmap bitmap(image);
+    dc.DrawBitmap(bitmap, 0, 0, true);
+}
+
+void HiddenPhotoFrame::OpenImage(wxImage* const image)
+{
+    if (image == nullptr)
+    {
+        wxMessageBox(wxT("Nie da siê przechowaæ obrazu."), "Error", wxOK | wxICON_ERROR);
+        return;
+    }
+
+    wxFileDialog loadFileDialog(
+        this,
+        wxT("Otwórz Plik"),
+        "",
+        "",
+        "Image Files (*.bmp;*.png;*.jpg)|*.bmp;*.png;*.jpg",
+        wxFD_OPEN | wxFD_FILE_MUST_EXIST
+    );
+
+    if (loadFileDialog.ShowModal() == wxID_CANCEL)
+        return;
+
+    wxString imagePath = loadFileDialog.GetPath();
+    if (!image->LoadFile(imagePath))
+        wxMessageBox(wxT("Nie uda³o siê wczytaæ plik."), "Error", wxOK | wxICON_ERROR);
 }

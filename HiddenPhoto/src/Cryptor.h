@@ -32,20 +32,25 @@ namespace Cryptor
 		PhotoManager();
 		~PhotoManager();
 
-		void SetSteganografImage(wxImage&& newSteganograf, bool decryptEncrypt = true);
-		void SetKryptografImage(wxImage&& newKryptograf);
-		void SetKryptografImage(wxImage&& newKryptografFisrt,  wxImage&& newKryptografSecond);
+		const wxImage& GetSteganografImage() const;
+		const wxImage& GetSteganografDecryptImage() const;
+		void SetSteganografImage(const wxImage& newSteganograf, bool decryptEncrypt = true);
+		
+		const wxImage& GetKryptografImage() const;
+		const std::pair<wxImage, wxImage>& GetKryptografDecryptImage() const;
+		void SetKryptografImage(const wxImage& newKryptograf);
+		void SetKryptografImage(const wxImage& newKryptografFisrt, const wxImage& newKryptografSecond);
 
 	private:
 		uint8_t* GetRealSteganografData();
 		std::pair<uint8_t*, uint8_t*> GetRealKryptografData();
 
 	private:
-		wxImage m_DecryptSteganografImage;
 		wxImage m_EncryptSteganografImage;
+		wxImage m_DecryptSteganografImage;
 		
-		wxImage m_DecryptKryptografImage;
-		std::pair<wxImage, wxImage> m_EncryptKryptografImage;
+		wxImage m_EncryptKryptografImage;
+		std::pair<wxImage, wxImage> m_DecryptKryptografImage;
 	};
 
 

@@ -23,6 +23,9 @@ private:
     void OnStartEncryption(wxCommandEvent& event);
     void OnSaveToFile(wxCommandEvent& event);
 
+    void Repaint();
+    void OpenImage(wxImage* const image);
+
 private:
     enum EntityID
     {
@@ -34,9 +37,9 @@ private:
         ID_BT_SaveToFile,
         ID_P_Picture
     };
-    enum EncryptionType
+    enum EncryptionType : int32_t
     {
-        Steganograficzna,
+        Steganograficzna = 0,
         Kryptograficzna
     };
     
