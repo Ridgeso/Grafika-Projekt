@@ -10,7 +10,7 @@ HiddenPhotoFrame::HiddenPhotoFrame()
     : wxFrame(nullptr, ID_HiddenPhoto, "Hidden Photo | Graphics Lab Project"),
     m_SteganoImage(), m_KryptoImage{}
 {
-    m_PhotoManager = std::make_unique<Cryptor::PhotoManager>();
+    m_PhotoManager = std::make_unique<PhotoCryptor::PhotoManager>();
     m_CryptionManager= std::make_unique<Cryptor::CryptionManager>();
 
     SetIcon(wxNullIcon);
@@ -182,23 +182,23 @@ void HiddenPhotoFrame::Repaint()
         case EncryptionType::Steganograficzna:
         {
             image = m_CB_EncryptDecrypt->GetValue() ?
-                m_PhotoManager->GetSteganografDecryptImage()
+                m_PhotoManager->GetSteganografDecImage()
                 :
-                m_PhotoManager->GetSteganografImage();
+                m_PhotoManager->GetSteganografEncImage();
             break;
         }
         case EncryptionType::Kryptograficzna:
         {
             if (m_CB_EncryptDecrypt->GetValue())
             {
-                const auto& [decrypt1, decrypt2] = m_PhotoManager->GetKryptografDecryptImage();
+                const auto& [decrypt1, decrypt2] = m_PhotoManager->GetKryptografDecImage();
                 image = decrypt1;
 
                 wxBitmap bitmap(decrypt2);
                 dc.DrawBitmap(bitmap, s_MinWindowSize.x / 2, 0, true);
             }
             else
-                image = m_PhotoManager->GetKryptografImage();
+                image = m_PhotoManager->GetKryptografEncImage();
             break;
         }
 

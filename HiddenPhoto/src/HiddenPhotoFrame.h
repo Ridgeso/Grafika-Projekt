@@ -8,6 +8,7 @@
 #include <wx/file.h>
 
 #include "Cryptor.h"
+#include "PhotoCryptor.h"
 
 class HiddenPhotoFrame : public wxFrame
 {
@@ -58,7 +59,7 @@ private:
     wxImage m_SteganoImage;
     std::array<wxImage, 2> m_KryptoImage;
 
-    std::unique_ptr<Cryptor::PhotoManager> m_PhotoManager;
+    std::unique_ptr<PhotoCryptor::PhotoManager> m_PhotoManager;
     std::unique_ptr<Cryptor::CryptionManager> m_CryptionManager;
 
     static const wxSize s_MinWindowSize;

@@ -155,22 +155,21 @@
     </ClCompile>
     <ClCompile Include="src\HiddenPhotoFrame.cpp" />
     <ClCompile Include="src\HPpch.cpp">
-      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </PrecompiledHeaderFile>
-      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </PrecompiledHeaderFile>
-      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </PrecompiledHeaderFile>
-      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-      </PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">HPpch.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">HPpch.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">HPpch.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">HPpch.h</PrecompiledHeaderFile>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="src\Cryptor.cpp" />
+    <ClCompile Include="src\PhotoCryptor.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Cryptor\Cryptor.vcxproj">
+      <Project>{95280422-9e11-494b-b365-c2eb58288da9}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\wxWidgetsProj\wxWidgetsProj.vcxproj">
       <Project>{e105e5ff-256e-4c45-b92a-7bf57824b603}</Project>
     </ProjectReference>
@@ -250,7 +249,7 @@
   <ItemGroup>
     <ClInclude Include="src\HiddenPhotoFrame.h" />
     <ClInclude Include="src\HPpch.h" />
-    <ClInclude Include="src\Cryptor.h" />
+    <ClInclude Include="src\PhotoCryptor.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="TODO.txt" />
