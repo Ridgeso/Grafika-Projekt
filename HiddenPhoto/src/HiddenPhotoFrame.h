@@ -24,7 +24,7 @@ private:
     void OnStartEncryption(wxCommandEvent& event);
     void OnSaveToFile(wxCommandEvent& event);
 
-    void Repaint();
+    void Repaint(bool mode = false);
     void OpenImage(wxImage* const image);
 
 private:

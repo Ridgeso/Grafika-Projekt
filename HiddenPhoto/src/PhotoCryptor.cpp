@@ -51,7 +51,8 @@ namespace PhotoCryptor
 
 	void PhotoManager::SetRealSteganografEncData(uint8_t* newData)
 	{
-		m_EncryptSteganografImage.SetData(newData);
+		if (newData != nullptr)
+			m_EncryptSteganografImage.SetData(newData);
 	}
 
 	uint8_t* PhotoManager::GetRealSteganografDecData() const
@@ -61,7 +62,8 @@ namespace PhotoCryptor
 
 	void PhotoManager::SetRealSteganografDecData(uint8_t* newData)
 	{
-		m_DecryptSteganografImage.SetData(newData);
+		if (newData != nullptr)
+			m_DecryptSteganografImage.SetData(newData);
 	}
 
 	uint8_t* PhotoManager::GetRealKryptografEncData() const
@@ -71,7 +73,8 @@ namespace PhotoCryptor
 
 	void PhotoManager::SetRealKryptografEncData(uint8_t* newData)
 	{
-		m_EncryptKryptografImage.SetData(newData);
+		if (newData != nullptr)
+			m_EncryptKryptografImage.SetData(newData);
 	}
 
 	std::pair<uint8_t*, uint8_t*> PhotoManager::GetRealKryptografDecData() const
@@ -84,8 +87,11 @@ namespace PhotoCryptor
 
 	void PhotoManager::SetRealKryptografDecData(std::pair<uint8_t*, uint8_t*> newData)
 	{
-		m_DecryptKryptografImage.first.SetData(newData.first);
-		m_DecryptKryptografImage.second.SetData(newData.second);
+		if (newData.first != nullptr && newData.second != nullptr)
+		{
+			m_DecryptKryptografImage.first.SetData(newData.first);
+			m_DecryptKryptografImage.second.SetData(newData.second);
+		}
 	}
 
 }
