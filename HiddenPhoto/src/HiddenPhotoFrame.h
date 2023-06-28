@@ -18,8 +18,6 @@ public:
 private:
     void OnExit(wxCommandEvent& event);
 
-    void OnEncryptionDecryptionChange(wxCommandEvent& event);
-    void OnEbcryptionTypeChange(wxCommandEvent& event);
     void OnLoadImages(wxCommandEvent& event);
     void OnStartEncryption(wxCommandEvent& event);
     void OnSaveToFile(wxCommandEvent& event);

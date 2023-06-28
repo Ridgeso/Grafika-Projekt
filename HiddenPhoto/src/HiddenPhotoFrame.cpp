@@ -99,8 +99,6 @@ HiddenPhotoFrame::HiddenPhotoFrame()
     // Events
     Bind(wxEVT_MENU, &HiddenPhotoFrame::OnExit, this, wxID_EXIT);
 
-    Bind(wxEVT_CHECKBOX, &HiddenPhotoFrame::OnEncryptionDecryptionChange, this, ID_CB_EncryptDecrypt);
-    Bind(wxEVT_COMBOBOX, &HiddenPhotoFrame::OnEbcryptionTypeChange, this, ID_CO_EncryptionType);
     Bind(wxEVT_BUTTON, &HiddenPhotoFrame::OnLoadImages, this, ID_BT_LoadImage);
     Bind(wxEVT_BUTTON, &HiddenPhotoFrame::OnStartEncryption, this, ID_BT_StartEncryption);
     Bind(wxEVT_BUTTON, &HiddenPhotoFrame::OnSaveToFile, this, ID_BT_SaveToFile);
@@ -199,6 +197,9 @@ void HiddenPhotoFrame::OnStartEncryption(wxCommandEvent& event)
             break;
         }
     }
+
+    Repaint(true);
+}
 
     Repaint(true);
 }
