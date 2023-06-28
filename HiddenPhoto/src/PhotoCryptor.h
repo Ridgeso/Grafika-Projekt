@@ -26,7 +26,7 @@ namespace PhotoCryptor
 		void SetKryptografImage(const wxImage& newKryptograf);
 		void SetKryptografImage(const wxImage& newKryptografFisrt, const wxImage& newKryptografSecond);
 
-	private:
+	public:
 		uint8_t* GetRealSteganografEncData() const;
 		void SetRealSteganografEncData(uint8_t* newData);
 		uint8_t* GetRealSteganografDecData() const;

@@ -1,105 +1,95 @@
 #pragma once
 #include <stdint.h>
 #include <utility>
+#include <type_traits>
 
 namespace Cryptor
 {
 
 	template<typename Derrived>
-	class DataManager
+	struct DataManager
 	{
-	public:
 		uint8_t* GetSteganografEncData() const
 		{
-			return static_cast<Derrived*>(this)->GetRealSteganografEncData();
+			return static_cast<const Derrived*>(this)->GetRealSteganografEncData();
 		}
 
 		void SetSteganografEncData(uint8_t* newData)
 		{
-			static_cast<Derrived*>(this)->SetReakSteganografEncData(newData);
+			static_cast<Derrived*>(this)->SetRealSteganografEncData(newData);
 		}
 
 		uint8_t* GetKryptografEncData() const
 		{
-			return static_cast<Derrived*>(this)->GetRealKryptografEncData();
+			return static_cast<const Derrived*>(this)->GetRealKryptografEncData();
 		}
 
 		void SetKryptografEncData(uint8_t* newData)
 		{
-			static_cast<Derrived*>(this)->SetReakSteganografEncData(newData);
+			static_cast<Derrived*>(this)->SetRealSteganografEncData(newData);
 		}
 
 		uint8_t* GetSteganografDecData() const
 		{
-			return static_cast<Derrived*>(this)->GetRealSteganografDecData();
+			return static_cast<const Derrived*>(this)->GetRealSteganografDecData();
 		}
 
 		void SetSteganografDecData(uint8_t* newData)
 		{
-			static_cast<Derrived*>(this)->SetReakSteganografDecData(newData);
+			static_cast<Derrived*>(this)->SetRealSteganografDecData(newData);
 		}
 
 		std::pair<uint8_t*, uint8_t*> GetKryptografDecData() const
 		{
-			return static_cast<Derrived*>(this)->GetRealKryptografDecData();
+			return static_cast<const Derrived*>(this)->GetRealKryptografDecData();
 		}
 
 		void SetKryptografDecData(std::pair<uint8_t*, uint8_t*> newData)
 		{
-			static_cast<Derrived*>(this)->SetReakSteganografDecData(newData);
+			static_cast<Derrived*>(this)->SetRealKryptografDecData(newData);
 		}
-
-	private:
-
 	};
 
 
 	template<typename Derrived>
-	class CryptorManager
+	struct CryptorManager
 	{
-	public:
-		template<typename ImageHandler>
-		void EncryptSteganograficzna(const std::unique_ptr<DataManager<ImageHandler>>& dataManager) const
+		template<typename DataHandler>
+		void EncryptSteganograficzna(DataManager<DataHandler>& dataManager) const
 		{
-			uint8_t* data = dataManager->GetSteganografEncData();
-			uint8_t* decryptedData = static_cast<Derrived*>(this)->EncryptSteganograficznaImpl(data);
-			dataManager->SetSteganografDecData(decryptedData);
+			uint8_t* data = dataManager.GetSteganografEncData();
+			uint8_t* decryptedData = static_cast<const Derrived*>(this)->EncryptSteganograficznaImpl(data);
+			dataManager.SetSteganografDecData(decryptedData);
 		}
 
-		template<typename ImageHandler>
-		void DecryptSteganograficzna(const std::unique_ptr<DataManager<ImageHandler>>& dataManager) const
+		template<typename DataHandler>
+		void DecryptSteganograficzna(DataManager<DataHandler>& dataManager) const
 		{
-			uint8_t* data = dataManager->GetKryptografDecData();
-			uint8_t* encryptedData = static_cast<Derrived*>(this)->DecryptSteganograficznaImpl(data);
-			dataManager->SetSteganografEncData(encryptedData);
+			uint8_t* data = dataManager.GetSteganografDecData();
+			uint8_t* encryptedData = static_cast<const Derrived*>(this)->DecryptSteganograficznaImpl(data);
+			dataManager.SetSteganografEncData(encryptedData);
 		}
 
-		template<typename ImageHandler>
-		void EncryptKryptograficzna(const std::unique_ptr<DataManager<ImageHandler>>& dataManager) const
+		template<typename DataHandler>
+		void EncryptKryptograficzna(DataManager<DataHandler>& dataManager) const
 		{
-			uint8_t* data = dataManager->GetKryptografEncData();
-			auto decryptedData = static_cast<Derrived*>(this)->EncryptKryptograficznaImpl(data);
-			dataManager->SetKryptografDecData(decryptedData);
+			uint8_t* data = dataManager.GetKryptografEncData();
+			auto decryptedData = static_cast<const Derrived*>(this)->EncryptKryptograficznaImpl(data);
+			dataManager.SetKryptografDecData(decryptedData);
 		}
 
-		template<typename ImageHandler>
-		void DecryptKryptograficzna(const std::unique_ptr<DataManager<ImageHandler>>& dataManager) const
+		template<typename DataHandler>
+		void DecryptKryptograficzna(DataManager<DataHandler>& dataManager) const
 		{
-			auto data = dataManager->GetKryptografDecData();
-			uint8_t* encryptedData = static_cast<Derrived*>(this)->DecryptKryptograficznaImpl(data);
-			dataManager->SetKryptografEncData(encryptedData);
+			auto data = dataManager.GetKryptografDecData();
+			uint8_t* encryptedData = static_cast<const Derrived*>(this)->DecryptKryptograficznaImpl(data);
+			dataManager.SetKryptografEncData(encryptedData);
 		}
-
-	private:
-
 	};
 
 
-	class CryptionManager : public CryptorManager<CryptionManager>
+	struct CryptionManager : public CryptorManager<CryptionManager>
 	{
-	public:
-
-	private:
 		uint8_t* EncryptSteganograficznaImpl(uint8_t* encrypt) const;
 		uint8_t* DecryptSteganograficznaImpl(uint8_t* decrypt) const;
 		std::pair<uint8_t*, uint8_t*> EncryptKryptograficznaImpl(uint8_t* encrypt) const;
