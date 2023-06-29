@@ -18,6 +18,7 @@ namespace PhotoCryptor
 
 	void PhotoManager::SetSteganografImage(const wxImage& newSteganograf, const wxImage& referenceImage, bool decryptEncrypt)
 	{
+		//create copies of images to store in photoManager instance
 		m_ReferenceSteganografImage = referenceImage;
 		if (decryptEncrypt)
 		{
@@ -26,6 +27,14 @@ namespace PhotoCryptor
 		else
 		{
 			m_DecryptSteganografImage = newSteganograf;
+		}
+		//pass the copies(!) to stegaManager for processing
+		const wxImage* sourceImage = decryptEncrypt ? &m_EncryptSteganografImage : &m_DecryptSteganografImage;
+		bool imagesOk = stegaManager.SetImages(&m_ReferenceSteganografImage, sourceImage);
+
+		if (!imagesOk)
+		{
+			stegaManager.SetDefault();
 		}
 	}
 
