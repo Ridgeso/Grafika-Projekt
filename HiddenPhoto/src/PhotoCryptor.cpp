@@ -72,7 +72,7 @@ namespace PhotoCryptor
 	void PhotoManager::SetRealSteganografEncData(Cryptor::Image newData)
 	{
 		if (newData.Data != nullptr)
-			m_EncryptSteganografImage.SetData(newData.Data, newData.Widht, newData.Height);
+			m_EncryptSteganografImage.SetData(newData.Data, newData.Width, newData.Height);
 	}
 
 	std::pair<const Cryptor::Image, const Cryptor::Image> PhotoManager::GetRealSteganografDecData() const
@@ -83,7 +83,7 @@ namespace PhotoCryptor
 	void PhotoManager::SetRealSteganografDecData(Cryptor::Image newData)
 	{
 		if (newData.Data != nullptr)
-			m_DecryptSteganografImage.SetData(newData.Data, newData.Widht, newData.Height);
+			m_DecryptSteganografImage.SetData(newData.Data, newData.Width, newData.Height);
 	}
 
 	Cryptor::Image PhotoManager::GetRealKryptografEncData() const
@@ -100,7 +100,7 @@ namespace PhotoCryptor
 	void PhotoManager::SetRealKryptografEncData(Cryptor::Image newData)
 	{
 		if (newData.Data != nullptr)
-			m_EncryptKryptografImage.SetData(newData.Data, newData.Widht, newData.Height);
+			m_EncryptKryptografImage.SetData(newData.Data, newData.Width, newData.Height);
 	}
 
 	std::pair<Cryptor::Image, Cryptor::Image> PhotoManager::GetRealKryptografDecData() const
@@ -124,8 +124,8 @@ namespace PhotoCryptor
 	{
 		if (newData.first.Data != nullptr && newData.second.Data != nullptr)
 		{
-			m_DecryptKryptografImage.first.SetData(newData.first.Data, newData.first.Widht, newData.first.Height);
-			m_DecryptKryptografImage.second.SetData(newData.second.Data, newData.second.Widht, newData.second.Height);
+			m_DecryptKryptografImage.first.SetData(newData.first.Data, newData.first.Width, newData.first.Height);
+			m_DecryptKryptografImage.second.SetData(newData.second.Data, newData.second.Width, newData.second.Height);
 		}
 	}
 

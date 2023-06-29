@@ -10,10 +10,14 @@ namespace Cryptor
 		const Image& encImage = encrypt.first;
 		const Image& refImage = encrypt.second;
 
-		Image result = { .Widht = 0, .Height = 0, .Chanel = 0, .Data = nullptr };
+		Image result = { .Width = 0, .Height = 0, .Channel = 0, .Data = nullptr };
 		
 		if(CheckStegaInputData(encImage, refImage) != true)
 			return result;
+
+		result.Height = refImage.Height;
+		result.Width = refImage.Width;
+		result.Channel = refImage.Channel;
 
 		return result;
 	}
@@ -38,7 +42,7 @@ namespace Cryptor
 
 	bool CryptionManager::CheckStegaInputData(const Image& src, const Image& ref) const
 	{
-		if((src.Widht != ref.Widht) || (src.Height != ref.Height) || (src.Chanel != ref.Chanel))
+		if((src.Width != ref.Width) || (src.Height != ref.Height) || (src.Channel != ref.Channel))
 			return false;
 		if (src.Data == nullptr || ref.Data == nullptr)
 			return false;

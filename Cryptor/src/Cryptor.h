@@ -6,8 +6,8 @@ namespace Cryptor
 {
 	struct Image
 	{
-		int32_t Widht, Height;
-		int32_t Chanel;
+		int32_t Width, Height;
+		int32_t Channel;
 		uint8_t* Data;
 	};
 
