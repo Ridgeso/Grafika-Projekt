@@ -1,50 +1,55 @@
 #pragma once
 #include <stdint.h>
 #include <utility>
-#include <type_traits>
 
 namespace Cryptor
 {
+	struct Image
+	{
+		int32_t Widht, Height;
+		int32_t Chanel;
+		uint8_t* Data;
+	};
 
 	template<typename Derrived>
 	struct DataManager
 	{
-		uint8_t* GetSteganografEncData() const
+		Image GetSteganografEncData() const
 		{
 			return static_cast<const Derrived*>(this)->GetRealSteganografEncData();
 		}
 
-		void SetSteganografEncData(uint8_t* newData)
+		void SetSteganografEncData(Image newData)
 		{
 			static_cast<Derrived*>(this)->SetRealSteganografEncData(newData);
 		}
 
-		uint8_t* GetKryptografEncData() const
+		Image GetKryptografEncData() const
 		{
 			return static_cast<const Derrived*>(this)->GetRealKryptografEncData();
 		}
 
-		void SetKryptografEncData(uint8_t* newData)
+		void SetKryptografEncData(Image newData)
 		{
 			static_cast<Derrived*>(this)->SetRealSteganografEncData(newData);
 		}
 
-		uint8_t* GetSteganografDecData() const
+		Image GetSteganografDecData() const
 		{
 			return static_cast<const Derrived*>(this)->GetRealSteganografDecData();
 		}
 
-		void SetSteganografDecData(uint8_t* newData)
+		void SetSteganografDecData(Image newData)
 		{
 			static_cast<Derrived*>(this)->SetRealSteganografDecData(newData);
 		}
 
-		std::pair<uint8_t*, uint8_t*> GetKryptografDecData() const
+		std::pair<Image, Image> GetKryptografDecData() const
 		{
 			return static_cast<const Derrived*>(this)->GetRealKryptografDecData();
 		}
 
-		void SetKryptografDecData(std::pair<uint8_t*, uint8_t*> newData)
+		void SetKryptografDecData(std::pair<Image, Image> newData)
 		{
 			static_cast<Derrived*>(this)->SetRealKryptografDecData(newData);
 		}
@@ -57,23 +62,23 @@ namespace Cryptor
 		template<typename DataHandler>
 		void EncryptSteganograficzna(DataManager<DataHandler>& dataManager) const
 		{
-			uint8_t* data = dataManager.GetSteganografEncData();
-			uint8_t* decryptedData = static_cast<const Derrived*>(this)->EncryptSteganograficznaImpl(data);
+			Image data = dataManager.GetSteganografEncData();
+			Image decryptedData = static_cast<const Derrived*>(this)->EncryptSteganograficznaImpl(data);
 			dataManager.SetSteganografDecData(decryptedData);
 		}
 
 		template<typename DataHandler>
 		void DecryptSteganograficzna(DataManager<DataHandler>& dataManager) const
 		{
-			uint8_t* data = dataManager.GetSteganografDecData();
-			uint8_t* encryptedData = static_cast<const Derrived*>(this)->DecryptSteganograficznaImpl(data);
+			Image data = dataManager.GetSteganografDecData();
+			Image encryptedData = static_cast<const Derrived*>(this)->DecryptSteganograficznaImpl(data);
 			dataManager.SetSteganografEncData(encryptedData);
 		}
 
 		template<typename DataHandler>
 		void EncryptKryptograficzna(DataManager<DataHandler>& dataManager) const
 		{
-			uint8_t* data = dataManager.GetKryptografEncData();
+			Image data = dataManager.GetKryptografEncData();
 			auto decryptedData = static_cast<const Derrived*>(this)->EncryptKryptograficznaImpl(data);
 			dataManager.SetKryptografDecData(decryptedData);
 		}
@@ -82,7 +87,7 @@ namespace Cryptor
 		void DecryptKryptograficzna(DataManager<DataHandler>& dataManager) const
 		{
 			auto data = dataManager.GetKryptografDecData();
-			uint8_t* encryptedData = static_cast<const Derrived*>(this)->DecryptKryptograficznaImpl(data);
+			Image encryptedData = static_cast<const Derrived*>(this)->DecryptKryptograficznaImpl(data);
 			dataManager.SetKryptografEncData(encryptedData);
 		}
 	};
@@ -90,10 +95,10 @@ namespace Cryptor
 
 	struct CryptionManager : public CryptorManager<CryptionManager>
 	{
-		uint8_t* EncryptSteganograficznaImpl(uint8_t* encrypt) const;
-		uint8_t* DecryptSteganograficznaImpl(uint8_t* decrypt) const;
-		std::pair<uint8_t*, uint8_t*> EncryptKryptograficznaImpl(uint8_t* encrypt) const;
-		uint8_t* DecryptKryptograficznaImpl(std::pair<uint8_t*, uint8_t*> decrypt) const;
+		Image EncryptSteganograficznaImpl(Image encrypt) const;
+		Image DecryptSteganograficznaImpl(Image decrypt) const;
+		std::pair<Image, Image> EncryptKryptograficznaImpl(Image encrypt) const;
+		Image DecryptKryptograficznaImpl(std::pair<Image, Image> decrypt) const;
 	};
 
 }
