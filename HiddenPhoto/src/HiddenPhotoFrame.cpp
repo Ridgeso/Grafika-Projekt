@@ -142,14 +142,10 @@ void HiddenPhotoFrame::OnLoadImages(wxCommandEvent& event)
         }
         case EncryptionType::Steganograficzna:
         {
-            if (!decrypt)
-            {
-                wxImage referenceImage;
-                OpenImage(&referenceImage, "Otwórz plik referencyjny");
-                
-            }
+            wxImage referenceImage;
+            OpenImage(&referenceImage, "Otwórz plik referencyjny");
 
-            m_PhotoManager->SetSteganografImage(image, !decrypt);
+            m_PhotoManager->SetSteganografImage(image, referenceImage, !decrypt);
             break;
         }
         case EncryptionType::Kryptograficzna:

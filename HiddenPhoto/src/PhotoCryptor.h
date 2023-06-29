@@ -19,7 +19,7 @@ namespace PhotoCryptor
 
 		const wxImage& GetSteganografEncImage() const;
 		const wxImage& GetSteganografDecImage() const;
-		void SetSteganografImage(const wxImage& newSteganograf, bool decryptEncrypt = true);
+		void SetSteganografImage(const wxImage& newSteganograf, const wxImage& referenceImage, bool decryptEncrypt = true);
 		
 		const wxImage& GetKryptografEncImage() const;
 		const std::pair<wxImage, wxImage>& GetKryptografDecImage() const;
@@ -40,6 +40,7 @@ namespace PhotoCryptor
 	private:
 		wxImage m_EncryptSteganografImage;
 		wxImage m_DecryptSteganografImage;
+		wxImage m_ReferenceSteganografImage;
 		
 		wxImage m_EncryptKryptografImage;
 		std::pair<wxImage, wxImage> m_DecryptKryptografImage;

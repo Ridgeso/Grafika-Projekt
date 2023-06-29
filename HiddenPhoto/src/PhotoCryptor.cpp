@@ -16,13 +16,19 @@ namespace PhotoCryptor
 		return m_DecryptSteganografImage;
 	}
 
-	void PhotoManager::SetSteganografImage(const wxImage& newSteganograf, bool decryptEncrypt)
+	void PhotoManager::SetSteganografImage(const wxImage& newSteganograf, const wxImage& referenceImage, bool decryptEncrypt)
 	{
+		m_ReferenceSteganografImage = referenceImage;
 		if (decryptEncrypt)
+		{
 			m_EncryptSteganografImage = newSteganograf;
+		}
 		else
+		{
 			m_DecryptSteganografImage = newSteganograf;
+		}
 	}
+
 
 	const wxImage& PhotoManager::GetKryptografEncImage() const
 	{
