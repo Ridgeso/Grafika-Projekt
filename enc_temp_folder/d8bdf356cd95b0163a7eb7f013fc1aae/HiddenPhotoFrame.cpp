@@ -200,7 +200,7 @@ void HiddenPhotoFrame::OnStartEncryption(wxCommandEvent& event)
         }
     }
 
-    Repaint(true);
+    //Repaint(true);
 }
 
 void HiddenPhotoFrame::OnSaveToFile(wxCommandEvent& event)
