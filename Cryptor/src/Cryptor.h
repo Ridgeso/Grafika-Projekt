@@ -63,32 +63,32 @@ namespace Cryptor
 		void EncryptSteganograficzna(DataManager<DataHandler>& dataManager) const
 		{
 			std::pair<const Image, const Image> data = dataManager.GetSteganografEncData();
-			Image decryptedData = static_cast<const Derrived*>(this)->EncryptSteganograficznaImpl(data);
-			dataManager.SetSteganografDecData(decryptedData);
+			Image encryptedData = static_cast<const Derrived*>(this)->EncryptSteganograficznaImpl(data);
+			dataManager.SetSteganografDecData(encryptedData);
 		}
 
 		template<typename DataHandler>
 		void DecryptSteganograficzna(DataManager<DataHandler>& dataManager) const
 		{
 			std::pair<const Image, const Image> data = dataManager.GetSteganografDecData();
-			Image encryptedData = static_cast<const Derrived*>(this)->DecryptSteganograficznaImpl(data);
-			dataManager.SetSteganografEncData(encryptedData);
+			Image decryptedData = static_cast<const Derrived*>(this)->DecryptSteganograficznaImpl(data);
+			dataManager.SetSteganografEncData(decryptedData);
 		}
 
 		template<typename DataHandler>
 		void EncryptKryptograficzna(DataManager<DataHandler>& dataManager) const
 		{
 			Image data = dataManager.GetKryptografEncData();
-			auto decryptedData = static_cast<const Derrived*>(this)->EncryptKryptograficznaImpl(data);
-			dataManager.SetKryptografDecData(decryptedData);
+			auto encryptedData = static_cast<const Derrived*>(this)->EncryptKryptograficznaImpl(data);
+			dataManager.SetKryptografDecData(encryptedData);
 		}
 
 		template<typename DataHandler>
 		void DecryptKryptograficzna(DataManager<DataHandler>& dataManager) const
 		{
 			auto data = dataManager.GetKryptografDecData();
-			Image encryptedData = static_cast<const Derrived*>(this)->DecryptKryptograficznaImpl(data);
-			dataManager.SetKryptografEncData(encryptedData);
+			Image decryptedData = static_cast<const Derrived*>(this)->DecryptKryptograficznaImpl(data);
+			dataManager.SetKryptografEncData(decryptedData);
 		}
 	};
 
