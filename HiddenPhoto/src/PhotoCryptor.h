@@ -8,6 +8,7 @@
 #include <memory>
 #include <stdint.h>
 #include <utility>
+#include <utility>
 
 #include "Cryptor.h"
 
@@ -31,9 +32,9 @@ namespace PhotoCryptor
 		void SetKryptografImage(const wxImage& newKryptografFisrt, const wxImage& newKryptografSecond);
 
 	public:
-		Cryptor::Image GetRealSteganografEncData() const;
+		std::pair<const Cryptor::Image, const Cryptor::Image> GetRealSteganografEncData() const;
 		void SetRealSteganografEncData(Cryptor::Image newData);
-		Cryptor::Image GetRealSteganografDecData() const;
+		std::pair<const Cryptor::Image, const Cryptor::Image> GetRealSteganografDecData() const;
 		void SetRealSteganografDecData(Cryptor::Image newData);
 
 		Cryptor::Image GetRealKryptografEncData() const;

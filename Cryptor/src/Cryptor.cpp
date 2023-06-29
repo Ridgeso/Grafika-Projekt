@@ -5,13 +5,13 @@
 namespace Cryptor
 {
 
-	Image CryptionManager::EncryptSteganograficznaImpl(Image encrypt) const
+	Image CryptionManager::EncryptSteganograficznaImpl(std::pair<const Image, const Image> encrypt) const
 	{
 		// TODO: Zakodowywanie dobrego zdjecia | Metoda 1
 		return (Image)0;
 	}
 
-	Image CryptionManager::DecryptSteganograficznaImpl(Image decrypt) const
+	Image CryptionManager::DecryptSteganograficznaImpl(std::pair<const Image, const Image> decrypt) const
 	{
 		// TODO: odkodowywanie zakodowanego zdjecia | Metoda 1
 		return (Image)0;

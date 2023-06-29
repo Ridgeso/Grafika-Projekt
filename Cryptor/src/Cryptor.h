@@ -14,7 +14,7 @@ namespace Cryptor
 	template<typename Derrived>
 	struct DataManager
 	{
-		Image GetSteganografEncData() const
+		std::pair<const Image, const Image> GetSteganografEncData() const
 		{
 			return static_cast<const Derrived*>(this)->GetRealSteganografEncData();
 		}
@@ -34,7 +34,7 @@ namespace Cryptor
 			static_cast<Derrived*>(this)->SetRealSteganografEncData(newData);
 		}
 
-		Image GetSteganografDecData() const
+		std::pair<const Image, const Image> GetSteganografDecData() const
 		{
 			return static_cast<const Derrived*>(this)->GetRealSteganografDecData();
 		}
@@ -62,7 +62,7 @@ namespace Cryptor
 		template<typename DataHandler>
 		void EncryptSteganograficzna(DataManager<DataHandler>& dataManager) const
 		{
-			Image data = dataManager.GetSteganografEncData();
+			std::pair<const Image, const Image> data = dataManager.GetSteganografEncData();
 			Image decryptedData = static_cast<const Derrived*>(this)->EncryptSteganograficznaImpl(data);
 			dataManager.SetSteganografDecData(decryptedData);
 		}
@@ -70,7 +70,7 @@ namespace Cryptor
 		template<typename DataHandler>
 		void DecryptSteganograficzna(DataManager<DataHandler>& dataManager) const
 		{
-			Image data = dataManager.GetSteganografDecData();
+			std::pair<const Image, const Image> data = dataManager.GetSteganografDecData();
 			Image encryptedData = static_cast<const Derrived*>(this)->DecryptSteganograficznaImpl(data);
 			dataManager.SetSteganografEncData(encryptedData);
 		}
@@ -95,8 +95,8 @@ namespace Cryptor
 
 	struct CryptionManager : public CryptorManager<CryptionManager>
 	{
-		Image EncryptSteganograficznaImpl(Image encrypt) const;
-		Image DecryptSteganograficznaImpl(Image decrypt) const;
+		Image EncryptSteganograficznaImpl(std::pair<const Image, const Image> encrypt) const;
+		Image DecryptSteganograficznaImpl(std::pair<const Image, const Image> decrypt) const;
 		std::pair<Image, Image> EncryptKryptograficznaImpl(Image encrypt) const;
 		Image DecryptKryptograficznaImpl(std::pair<Image, Image> decrypt) const;
 	};

@@ -64,15 +64,24 @@ namespace PhotoCryptor
 		m_DecryptKryptografImage = std::make_pair(newKryptografFisrt, newKryptografSecond);
 	}
 
-	Cryptor::Image PhotoManager::GetRealSteganografEncData() const
+	std::pair<const Cryptor::Image, const Cryptor::Image> PhotoManager::GetRealSteganografEncData() const
 	{
-		Cryptor::Image image = {
+		Cryptor::Image encImage = {
 			m_EncryptSteganografImage.GetWidth(),
 			m_EncryptSteganografImage.GetHeight(),
-			m_EncryptSteganografImage.HasAlpha() ? 4 : 3,
+			//	m_EncryptSteganografImage.HasAlpha() ? 4 : 3, //has to be 3 since GetData does not return rgba
+			3,
 			m_EncryptSteganografImage.GetData()
 		};
-		return image;
+		Cryptor::Image refImage = {
+			m_ReferenceSteganografImage.GetWidth(),
+			m_ReferenceSteganografImage.GetHeight(),
+			//	m_ReferenceSteganografImage.HasAlpha() ? 4 : 3,
+			3,
+			m_ReferenceSteganografImage.GetData()
+		};
+
+		return std::make_pair(encImage, refImage);
 	}
 
 	void PhotoManager::SetRealSteganografEncData(Cryptor::Image newData)
@@ -81,15 +90,22 @@ namespace PhotoCryptor
 			m_EncryptSteganografImage.SetData(newData.Data, newData.Widht, newData.Height);
 	}
 
-	Cryptor::Image PhotoManager::GetRealSteganografDecData() const
+	std::pair<const Cryptor::Image, const Cryptor::Image> PhotoManager::GetRealSteganografDecData() const
 	{
-		Cryptor::Image image = {
+		Cryptor::Image refImage = {
+			m_EncryptSteganografImage.GetWidth(),
+			m_EncryptSteganografImage.GetHeight(),
+			3,
+			m_EncryptSteganografImage.GetData()
+		};
+		Cryptor::Image decImage = {
 			m_DecryptSteganografImage.GetWidth(),
 			m_DecryptSteganografImage.GetHeight(),
-			m_DecryptSteganografImage.HasAlpha() ? 4 : 3,
+			//m_DecryptSteganografImage.HasAlpha() ? 4 : 3,
+			3,
 			m_DecryptSteganografImage.GetData()
 		};
-		return image;
+		return std::make_pair(decImage, refImage);
 	}
 
 	void PhotoManager::SetRealSteganografDecData(Cryptor::Image newData)

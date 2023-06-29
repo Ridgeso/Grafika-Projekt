@@ -113,7 +113,6 @@ void HiddenPhotoFrame::OnExit(wxCommandEvent& event)
     Close(true);
 }
 
-
 void HiddenPhotoFrame::OnEncryptionDecryptionChange(wxCommandEvent& event)
 {
     Repaint();
