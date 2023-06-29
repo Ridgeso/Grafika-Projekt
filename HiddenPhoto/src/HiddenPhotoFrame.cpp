@@ -234,17 +234,22 @@ void HiddenPhotoFrame::OnStartEncryption(wxCommandEvent& event)
 void HiddenPhotoFrame::OnSaveToFile(wxCommandEvent& event)
 {
     const wxImage* image = nullptr;
-
+  
     bool decrypt = m_CB_EncryptDecrypt->GetValue();
+    
     switch (m_CO_EncryptionType->GetSelection())
     {
     case EncryptionType::Steganograficzna:
     {
         //image was saved in the unused wxImage object
         if (decrypt)
+        {
             image = &m_PhotoManager->GetSteganografEncImage();
+        }
         else
+        {
             image = &m_PhotoManager->GetSteganografDecImage();
+        }
         break;
     }
     case EncryptionType::Kryptograficzna:
@@ -256,8 +261,8 @@ void HiddenPhotoFrame::OnSaveToFile(wxCommandEvent& event)
         else
         {
             std::pair<const wxImage, const wxImage> images = m_PhotoManager->GetKryptografDecImage();
-            SaveImageToFile(images.first);
-            SaveImageToFile(images.second);
+            SaveImageToFile(images.first, "Zapisz pierwszy zakodowany plik");
+            SaveImageToFile(images.second, "Zapisz drugi zakodowany plik");
             return;
         }
         break;
@@ -273,12 +278,28 @@ void HiddenPhotoFrame::OnSaveToFile(wxCommandEvent& event)
         wxMessageBox(wxT("B³¹d zapisu pliku"), "Error", wxOK | wxICON_ERROR);
         return;
     }
-    SaveImageToFile(*image);
+
+    wxString dialogName = decrypt ? "Zapisz zdekodowany plik" : "Zapisz zakodowany plik";
+    SaveImageToFile(*image, dialogName);
 }
 
-void HiddenPhotoFrame::SaveImageToFile(const wxImage& image) const
+void HiddenPhotoFrame::SaveImageToFile(const wxImage& image, wxString dialogName)
 {
-    //TODO
+    wxFileDialog saveFileDialog(
+        this,
+        dialogName,
+        "",
+        "",
+        "PNG File (*.png;)|*.png;",
+        wxFD_SAVE | wxFD_OVERWRITE_PROMPT
+    );
+
+    auto result = saveFileDialog.ShowModal();
+    
+    if (result != wxID_OK)
+        return;
+    
+    image.SaveFile(saveFileDialog.GetPath(), wxBITMAP_TYPE_PNG);
 }
 
 void HiddenPhotoFrame::Repaint(bool mode)
