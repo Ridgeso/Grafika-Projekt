@@ -99,6 +99,10 @@ namespace Cryptor
 		Image DecryptSteganograficznaImpl(std::pair<const Image, const Image> decrypt) const;
 		std::pair<Image, Image> EncryptKryptograficznaImpl(Image encrypt) const;
 		Image DecryptKryptograficznaImpl(std::pair<Image, Image> decrypt) const;
+
+	private:
+
+		bool CheckStegaInputData(const Image& src, const Image& ref) const;
 	};
 
 }
