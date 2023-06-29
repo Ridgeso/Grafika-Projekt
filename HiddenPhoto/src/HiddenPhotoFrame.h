@@ -23,7 +23,7 @@ private:
     void OnSaveToFile(wxCommandEvent& event);
 
     void Repaint(bool mode = false);
-    void OpenImage(wxImage* const image);
+    void OpenImage(wxImage* const image, wxString dialogText = "Otwórz plik");
 
 private:
     enum EntityID

@@ -130,6 +130,9 @@ void HiddenPhotoFrame::OnLoadImages(wxCommandEvent& event)
     if (!image.IsOk())
         return;
 
+    //true if decrypting, false if encrypting
+    bool decrypt = m_CB_EncryptDecrypt->GetValue();
+
     switch (m_CO_EncryptionType->GetSelection())
     {
         case wxNOT_FOUND:
@@ -139,12 +142,19 @@ void HiddenPhotoFrame::OnLoadImages(wxCommandEvent& event)
         }
         case EncryptionType::Steganograficzna:
         {
-            m_PhotoManager->SetSteganografImage(image, !m_CB_EncryptDecrypt->GetValue());
+            if (!decrypt)
+            {
+                wxImage referenceImage;
+                OpenImage(&referenceImage, "Otwórz plik referencyjny");
+                
+            }
+
+            m_PhotoManager->SetSteganografImage(image, !decrypt);
             break;
         }
         case EncryptionType::Kryptograficzna:
         {
-            if (!m_CB_EncryptDecrypt->GetValue())
+            if (!decrypt)
                 m_PhotoManager->SetKryptografImage(image);
             else
             {
@@ -254,7 +264,7 @@ void HiddenPhotoFrame::Repaint(bool mode)
     dc.DrawBitmap(bitmap, 0, 0, true);
 }
 
-void HiddenPhotoFrame::OpenImage(wxImage* const image)
+void HiddenPhotoFrame::OpenImage(wxImage* const image, wxString dialogText)
 {
     if (image == nullptr)
     {
@@ -264,7 +274,7 @@ void HiddenPhotoFrame::OpenImage(wxImage* const image)
 
     wxFileDialog loadFileDialog(
         this,
-        wxT("Otwórz Plik"),
+        dialogText,
         "",
         "",
         "Image Files (*.bmp;*.png;*.jpg)|*.bmp;*.png;*.jpg",
