@@ -243,6 +243,11 @@ void HiddenPhotoFrame::Repaint(bool mode)
             break;
         }
     }
+    
+    if (image.IsOk() != true)
+    {
+        return;
+    }
 
     wxBitmap bitmap(image);
     dc.DrawBitmap(bitmap, 0, 0, true);
