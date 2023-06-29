@@ -31,3 +31,16 @@ void SteganografManager::SetDefault()
     this->_destImage = wxImage();
 
 }
+
+bool SteganografManager::IsReady() const
+{
+    if (this->_sourceImage == nullptr || this->_referenceImage == nullptr)
+        return false;
+
+    if (this->_sourceImage->IsOk() != true)
+        return false;
+    if (this->_referenceImage->IsOk() != true)
+        return false;
+
+    return true;
+}

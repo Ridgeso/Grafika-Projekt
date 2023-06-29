@@ -17,6 +17,8 @@ public:
 	bool SetImages(const wxImage* referenceImage, const wxImage* sourceImage);
 	void SetDefault();
 
+	bool IsReady() const;
+
 
 };
 

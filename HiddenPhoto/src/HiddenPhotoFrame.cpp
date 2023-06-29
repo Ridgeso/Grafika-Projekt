@@ -181,16 +181,23 @@ void HiddenPhotoFrame::OnStartEncryption(wxCommandEvent& event)
         }
         case EncryptionType::Steganograficzna:
         {
+            bool allOk = true;
             if (!m_CB_EncryptDecrypt->GetValue())
             {
-                if (m_PhotoManager->GetSteganografEncImage().IsOk())
+                if (m_PhotoManager->GetSteganografEncImage().IsOk() && m_PhotoManager->IsSteganografReady())
                     m_CryptionManager->EncryptSteganograficzna(*m_PhotoManager);
+                else
+                    allOk = false;
             }
             else
             {
-                if (m_PhotoManager->GetSteganografDecImage().IsOk())
+                if (m_PhotoManager->GetSteganografDecImage().IsOk() && m_PhotoManager->IsSteganografReady())
                     m_CryptionManager->DecryptSteganograficzna(*m_PhotoManager);
+                else
+                    allOk = false;
             }
+            if(!allOk)
+                wxMessageBox(wxT("Operacja nie mog³a zostaæ rozpoczêta.\nUpewnij siê, ¿e obrazy s¹ za³adowane odpowiednio."), "Error", wxOK | wxICON_ERROR);
             break;
         }
         case EncryptionType::Kryptograficzna:

@@ -21,6 +21,7 @@ namespace PhotoCryptor
 		const wxImage& GetSteganografEncImage() const;
 		const wxImage& GetSteganografDecImage() const;
 		bool SetSteganografImage(const wxImage& newSteganograf, const wxImage& referenceImage, bool decryptEncrypt = true);
+		bool IsSteganografReady() const { return stegaManager.IsReady(); }
 		
 		const wxImage& GetKryptografEncImage() const;
 		const std::pair<wxImage, wxImage>& GetKryptografDecImage() const;
