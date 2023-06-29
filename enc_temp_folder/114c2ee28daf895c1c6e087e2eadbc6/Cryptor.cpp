@@ -19,13 +19,12 @@ namespace Cryptor
 		result.Width = refImage.Width;
 		result.Channel = refImage.Channel;
 
-		unsigned stride = result.Channel;
-		unsigned dataSize = result.Width * result.Height * stride;
+		unsigned dataSize = result.Width * result.Height * 3;
 
 		result.Data = new uint8_t[dataSize];
 		std::memcpy(result.Data, refImage.Data, dataSize);
 
-		for (unsigned i = 0; i < dataSize; i += stride)
+		for (unsigned i = 0; i < dataSize; i += 3)
 			result.Data[i] += encImage.Data[i] == 255 ? 1 : 0;
 
 		return result;
