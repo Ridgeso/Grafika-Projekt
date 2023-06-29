@@ -233,7 +233,52 @@ void HiddenPhotoFrame::OnStartEncryption(wxCommandEvent& event)
 
 void HiddenPhotoFrame::OnSaveToFile(wxCommandEvent& event)
 {
-    // TODO: zapisaæ do pliku odpowienie zdjêcie zakodowane / zdekodowane
+    const wxImage* image = nullptr;
+
+    bool decrypt = m_CB_EncryptDecrypt->GetValue();
+    switch (m_CO_EncryptionType->GetSelection())
+    {
+    case EncryptionType::Steganograficzna:
+    {
+        //image was saved in the unused wxImage object
+        if (decrypt)
+            image = &m_PhotoManager->GetSteganografEncImage();
+        else
+            image = &m_PhotoManager->GetSteganografDecImage();
+        break;
+    }
+    case EncryptionType::Kryptograficzna:
+    {
+        if (decrypt)
+        {
+            image = &m_PhotoManager->GetKryptografEncImage();
+        }
+        else
+        {
+            std::pair<const wxImage, const wxImage> images = m_PhotoManager->GetKryptografDecImage();
+            SaveImageToFile(images.first);
+            SaveImageToFile(images.second);
+            return;
+        }
+        break;
+    }
+    default:
+    {
+        wxMessageBox(wxT("Nieprawod³owy rodzaj kodowania"), "Error", wxOK | wxICON_ERROR);
+        return;
+    }
+    }
+    if (image == nullptr)
+    {
+        wxMessageBox(wxT("B³¹d zapisu pliku"), "Error", wxOK | wxICON_ERROR);
+        return;
+    }
+    SaveImageToFile(*image);
+}
+
+void HiddenPhotoFrame::SaveImageToFile(const wxImage& image) const
+{
+    //TODO
 }
 
 void HiddenPhotoFrame::Repaint(bool mode)

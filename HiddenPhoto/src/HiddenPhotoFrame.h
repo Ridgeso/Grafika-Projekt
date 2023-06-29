@@ -23,6 +23,7 @@ private:
     void OnLoadImages(wxCommandEvent& event);
     void OnStartEncryption(wxCommandEvent& event);
     void OnSaveToFile(wxCommandEvent& event);
+    void SaveImageToFile(const wxImage& image) const;
 
     void Repaint(bool mode = false);
     void OpenImage(wxImage* const image, wxString dialogText = "Otwórz plik");
