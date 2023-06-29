@@ -130,6 +130,9 @@ void HiddenPhotoFrame::OnLoadImages(wxCommandEvent& event)
     if (!image.IsOk())
         return;
 
+    //true if decrypting, false if encrypting
+    bool decrypt = m_CB_EncryptDecrypt->GetValue();
+
     switch (m_CO_EncryptionType->GetSelection())
     {
         case wxNOT_FOUND:
@@ -139,12 +142,30 @@ void HiddenPhotoFrame::OnLoadImages(wxCommandEvent& event)
         }
         case EncryptionType::Steganograficzna:
         {
-            m_PhotoManager->SetSteganografImage(image, !m_CB_EncryptDecrypt->GetValue());
+            wxImage referenceImage;
+            OpenImage(&referenceImage, "Otwórz plik referencyjny");
+
+            bool allOk = m_PhotoManager->SetSteganografImage(image, referenceImage, !decrypt);
+            if (!allOk)
+            {
+                wxMessageBox(wxT("B³¹d wczytywania obrazów lub\nobrazy maj¹ ró¿ne rozmiary"), "Error", wxOK | wxICON_ERROR);
+                break;
+            }
+            if (!decrypt)
+            {
+                if (m_PhotoManager->IsImageBlackAndWhite(image) != true)
+                {
+                    wxMessageBox(wxT("Obraz do zakodowania zostanie przetransformowany na czarno-bia³y."), "Error", wxOK | wxICON_INFORMATION);
+                    m_PhotoManager->ConvertToBlackAndWhite(image, 180);
+                    //check is not needed here as it was performed earlier
+                    m_PhotoManager->SetSteganografImage(image, referenceImage, !decrypt);
+                }
+            }
             break;
         }
         case EncryptionType::Kryptograficzna:
         {
-            if (!m_CB_EncryptDecrypt->GetValue())
+            if (!decrypt)
                 m_PhotoManager->SetKryptografImage(image);
             else
             {
@@ -171,16 +192,23 @@ void HiddenPhotoFrame::OnStartEncryption(wxCommandEvent& event)
         }
         case EncryptionType::Steganograficzna:
         {
+            bool allOk = true;
             if (!m_CB_EncryptDecrypt->GetValue())
             {
-                if (m_PhotoManager->GetSteganografEncImage().IsOk())
+                if (m_PhotoManager->GetSteganografEncImage().IsOk() && m_PhotoManager->IsSteganografReady())
                     m_CryptionManager->EncryptSteganograficzna(*m_PhotoManager);
+                else
+                    allOk = false;
             }
             else
             {
-                if (m_PhotoManager->GetSteganografDecImage().IsOk())
+                if (m_PhotoManager->GetSteganografDecImage().IsOk() && m_PhotoManager->IsSteganografReady())
                     m_CryptionManager->DecryptSteganograficzna(*m_PhotoManager);
+                else
+                    allOk = false;
             }
+            if(!allOk)
+                wxMessageBox(wxT("Operacja nie mog³a zostaæ rozpoczêta.\nUpewnij siê, ¿e obrazy s¹ za³adowane odpowiednio."), "Error", wxOK | wxICON_ERROR);
             break;
         }
         case EncryptionType::Kryptograficzna:
@@ -205,7 +233,73 @@ void HiddenPhotoFrame::OnStartEncryption(wxCommandEvent& event)
 
 void HiddenPhotoFrame::OnSaveToFile(wxCommandEvent& event)
 {
-    // TODO: zapisaæ do pliku odpowienie zdjêcie zakodowane / zdekodowane
+    const wxImage* image = nullptr;
+  
+    bool decrypt = m_CB_EncryptDecrypt->GetValue();
+    
+    switch (m_CO_EncryptionType->GetSelection())
+    {
+    case EncryptionType::Steganograficzna:
+    {
+        //image was saved in the unused wxImage object
+        if (decrypt)
+        {
+            image = &m_PhotoManager->GetSteganografEncImage();
+        }
+        else
+        {
+            image = &m_PhotoManager->GetSteganografDecImage();
+        }
+        break;
+    }
+    case EncryptionType::Kryptograficzna:
+    {
+        if (decrypt)
+        {
+            image = &m_PhotoManager->GetKryptografEncImage();
+        }
+        else
+        {
+            std::pair<const wxImage, const wxImage> images = m_PhotoManager->GetKryptografDecImage();
+            SaveImageToFile(images.first, "Zapisz pierwszy zakodowany plik");
+            SaveImageToFile(images.second, "Zapisz drugi zakodowany plik");
+            return;
+        }
+        break;
+    }
+    default:
+    {
+        wxMessageBox(wxT("Nieprawod³owy rodzaj kodowania"), "Error", wxOK | wxICON_ERROR);
+        return;
+    }
+    }
+    if (image == nullptr)
+    {
+        wxMessageBox(wxT("B³¹d zapisu pliku"), "Error", wxOK | wxICON_ERROR);
+        return;
+    }
+
+    wxString dialogName = decrypt ? "Zapisz zdekodowany plik" : "Zapisz zakodowany plik";
+    SaveImageToFile(*image, dialogName);
+}
+
+void HiddenPhotoFrame::SaveImageToFile(const wxImage& image, wxString dialogName)
+{
+    wxFileDialog saveFileDialog(
+        this,
+        dialogName,
+        "",
+        "",
+        "PNG File (*.png;)|*.png;",
+        wxFD_SAVE | wxFD_OVERWRITE_PROMPT
+    );
+
+    auto result = saveFileDialog.ShowModal();
+    
+    if (result != wxID_OK)
+        return;
+    
+    image.SaveFile(saveFileDialog.GetPath(), wxBITMAP_TYPE_PNG);
 }
 
 void HiddenPhotoFrame::Repaint(bool mode)
@@ -246,15 +340,21 @@ void HiddenPhotoFrame::Repaint(bool mode)
             break;
         }
     }
+    
+    if (image.IsOk() != true)
+    {
+        return;
+    }
 
     if (image.IsOk())
     {
         wxBitmap bitmap(image);
+        dc.Clear();
         dc.DrawBitmap(bitmap, 0, 0, true);
     }
 }
 
-void HiddenPhotoFrame::OpenImage(wxImage* const image)
+void HiddenPhotoFrame::OpenImage(wxImage* const image, wxString dialogText)
 {
     if (image == nullptr)
     {
@@ -264,7 +364,7 @@ void HiddenPhotoFrame::OpenImage(wxImage* const image)
 
     wxFileDialog loadFileDialog(
         this,
-        wxT("Otwórz Plik"),
+        dialogText,
         "",
         "",
         "Image Files (*.bmp;*.png;*.jpg)|*.bmp;*.png;*.jpg",

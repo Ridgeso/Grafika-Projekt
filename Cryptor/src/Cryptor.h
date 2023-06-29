@@ -6,15 +6,15 @@ namespace Cryptor
 {
 	struct Image
 	{
-		int32_t Widht, Height;
-		int32_t Chanel;
+		int32_t Width, Height;
+		int32_t Channel;
 		uint8_t* Data;
 	};
 
 	template<typename Derrived>
 	struct DataManager
 	{
-		Image GetSteganografEncData() const
+		std::pair<const Image, const Image> GetSteganografEncData() const
 		{
 			return static_cast<const Derrived*>(this)->GetRealSteganografEncData();
 		}
@@ -34,7 +34,7 @@ namespace Cryptor
 			static_cast<Derrived*>(this)->SetRealSteganografEncData(newData);
 		}
 
-		Image GetSteganografDecData() const
+		std::pair<const Image, const Image> GetSteganografDecData() const
 		{
 			return static_cast<const Derrived*>(this)->GetRealSteganografDecData();
 		}
@@ -62,43 +62,47 @@ namespace Cryptor
 		template<typename DataHandler>
 		void EncryptSteganograficzna(DataManager<DataHandler>& dataManager) const
 		{
-			Image data = dataManager.GetSteganografEncData();
-			Image decryptedData = static_cast<const Derrived*>(this)->EncryptSteganograficznaImpl(data);
-			dataManager.SetSteganografDecData(decryptedData);
+			std::pair<const Image, const Image> data = dataManager.GetSteganografEncData();
+			Image encryptedData = static_cast<const Derrived*>(this)->EncryptSteganograficznaImpl(data);
+			dataManager.SetSteganografDecData(encryptedData);
 		}
 
 		template<typename DataHandler>
 		void DecryptSteganograficzna(DataManager<DataHandler>& dataManager) const
 		{
-			Image data = dataManager.GetSteganografDecData();
-			Image encryptedData = static_cast<const Derrived*>(this)->DecryptSteganograficznaImpl(data);
-			dataManager.SetSteganografEncData(encryptedData);
+			std::pair<const Image, const Image> data = dataManager.GetSteganografDecData();
+			Image decryptedData = static_cast<const Derrived*>(this)->DecryptSteganograficznaImpl(data);
+			dataManager.SetSteganografEncData(decryptedData);
 		}
 
 		template<typename DataHandler>
 		void EncryptKryptograficzna(DataManager<DataHandler>& dataManager) const
 		{
 			Image data = dataManager.GetKryptografEncData();
-			auto decryptedData = static_cast<const Derrived*>(this)->EncryptKryptograficznaImpl(data);
-			dataManager.SetKryptografDecData(decryptedData);
+			auto encryptedData = static_cast<const Derrived*>(this)->EncryptKryptograficznaImpl(data);
+			dataManager.SetKryptografDecData(encryptedData);
 		}
 
 		template<typename DataHandler>
 		void DecryptKryptograficzna(DataManager<DataHandler>& dataManager) const
 		{
 			auto data = dataManager.GetKryptografDecData();
-			Image encryptedData = static_cast<const Derrived*>(this)->DecryptKryptograficznaImpl(data);
-			dataManager.SetKryptografEncData(encryptedData);
+			Image decryptedData = static_cast<const Derrived*>(this)->DecryptKryptograficznaImpl(data);
+			dataManager.SetKryptografEncData(decryptedData);
 		}
 	};
 
 
 	struct CryptionManager : public CryptorManager<CryptionManager>
 	{
-		Image EncryptSteganograficznaImpl(Image encrypt) const;
-		Image DecryptSteganograficznaImpl(Image decrypt) const;
+		Image EncryptSteganograficznaImpl(std::pair<const Image, const Image> encrypt) const;
+		Image DecryptSteganograficznaImpl(std::pair<const Image, const Image> decrypt) const;
 		std::pair<Image, Image> EncryptKryptograficznaImpl(Image encrypt) const;
 		Image DecryptKryptograficznaImpl(std::pair<Image, Image> decrypt) const;
+
+	private:
+
+		bool CheckStegaInputData(const Image& src, const Image& ref) const;
 	};
 
 }
