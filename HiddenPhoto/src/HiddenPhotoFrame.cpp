@@ -156,7 +156,7 @@ void HiddenPhotoFrame::OnLoadImages(wxCommandEvent& event)
                 if (m_PhotoManager->IsImageBlackAndWhite(image) != true)
                 {
                     wxMessageBox(wxT("Obraz do zakodowania zostanie przetransformowany na czarno-bia³y."), "Error", wxOK | wxICON_INFORMATION);
-                    
+                    m_PhotoManager->ConvertToBlackAndWhite(image, 180);
                     //check is not needed here as it was performed earlier
                     m_PhotoManager->SetSteganografImage(image, referenceImage, !decrypt);
                 }

@@ -127,4 +127,23 @@ namespace PhotoCryptor
 		return true;
 	}
 
+	bool PhotoManager::ConvertToBlackAndWhite(wxImage& image, uint8_t threshold) const
+	{
+		if (image.IsOk() != true)
+			return false;
+
+		unsigned dataSize = image.GetWidth() * image.GetHeight() * 3;
+		uint8_t* data = image.GetData();
+		
+		for (unsigned i = 0; i < dataSize; i += 3)
+		{
+			unsigned pixelAvg = (data[i] + data[i + 1] + data[i + 2]) / 3;
+			uint8_t newValue = 0;
+			if (pixelAvg >= threshold)
+				newValue = 255;
+			for (int j = 0; j < 3; j++)
+				data[i + j] = newValue;
+		}
+		return true;
+	}
 }
