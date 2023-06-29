@@ -39,6 +39,8 @@ namespace PhotoCryptor
 		std::pair<uint8_t*, uint8_t*> GetRealKryptografDecData() const;
 		void SetRealKryptografDecData(std::pair<uint8_t*, uint8_t*> newData);
 
+		bool IsImageBlackAndWhite(const wxImage& image) const;
+
 	private:
 		wxImage m_EncryptSteganografImage;
 		wxImage m_DecryptSteganografImage;

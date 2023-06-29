@@ -149,6 +149,17 @@ void HiddenPhotoFrame::OnLoadImages(wxCommandEvent& event)
             if (!allOk)
             {
                 wxMessageBox(wxT("B³¹d wczytywania obrazów lub\nobrazy maj¹ ró¿ne rozmiary"), "Error", wxOK | wxICON_ERROR);
+                break;
+            }
+            if (!decrypt)
+            {
+                if (m_PhotoManager->IsImageBlackAndWhite(image) != true)
+                {
+                    wxMessageBox(wxT("Obraz do zakodowania zostanie przetransformowany na czarno-bia³y."), "Error", wxOK | wxICON_INFORMATION);
+                    
+                    //check is not needed here as it was performed earlier
+                    m_PhotoManager->SetSteganografImage(image, referenceImage, !decrypt);
+                }
             }
             break;
         }

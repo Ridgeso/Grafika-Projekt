@@ -114,4 +114,17 @@ namespace PhotoCryptor
 		}
 	}
 
+	bool PhotoManager::IsImageBlackAndWhite(const wxImage& image) const
+	{
+		const uint8_t* data = image.GetData();
+		unsigned dataSize = image.GetWidth() * image.GetHeight() * 3;
+		
+		for (unsigned i = 0; i < dataSize; i++)
+		{
+			if (data[i] != 0xFF && data[i] != 0)
+				return false;
+		}
+		return true;
+	}
+
 }
