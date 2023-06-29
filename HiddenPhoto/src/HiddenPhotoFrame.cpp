@@ -183,6 +183,8 @@ void HiddenPhotoFrame::OnLoadImages(wxCommandEvent& event)
 
 void HiddenPhotoFrame::OnStartEncryption(wxCommandEvent& event)
 {
+    bool decrypt = m_CB_EncryptDecrypt->GetValue();
+
     switch (m_CO_EncryptionType->GetSelection())
     {
         case wxNOT_FOUND:
@@ -193,7 +195,7 @@ void HiddenPhotoFrame::OnStartEncryption(wxCommandEvent& event)
         case EncryptionType::Steganograficzna:
         {
             bool allOk = true;
-            if (!m_CB_EncryptDecrypt->GetValue())
+            if (!decrypt)
             {
                 if (m_PhotoManager->GetSteganografEncImage().IsOk() && m_PhotoManager->IsSteganografReady())
                     m_CryptionManager->EncryptSteganograficzna(*m_PhotoManager);
@@ -213,7 +215,7 @@ void HiddenPhotoFrame::OnStartEncryption(wxCommandEvent& event)
         }
         case EncryptionType::Kryptograficzna:
         {
-            if (!m_CB_EncryptDecrypt->GetValue())
+            if (!decrypt)
             {
                 if (m_PhotoManager->GetKryptografEncImage().IsOk())
                     m_CryptionManager->EncryptKryptograficzna(*m_PhotoManager);
