@@ -1,6 +1,7 @@
 #include "HPpch.h"
 #include "SteganografManager.h"
 
+
 bool SteganografManager::SetImages(const wxImage* referenceImage, const wxImage* sourceImage)
 {
     SetDefault();
@@ -43,4 +44,25 @@ bool SteganografManager::IsReady() const
         return false;
 
     return true;
+}
+
+std::pair<const Cryptor::Image, const Cryptor::Image> SteganografManager::GetCryptorData() const
+{
+    if (IsReady() != true)
+        return std::pair<const Cryptor::Image, const Cryptor::Image>(Cryptor::Image(), Cryptor::Image());
+
+    const Cryptor::Image refImage = {
+        _referenceImage->GetWidth(),
+        _referenceImage->GetHeight(),
+        3,
+        _referenceImage->GetData()
+    };
+    const Cryptor::Image srcImage = {
+        _sourceImage->GetWidth(),
+        _sourceImage->GetHeight(),
+        3,
+        _sourceImage->GetData()
+    };
+
+    return std::make_pair(srcImage, refImage);
 }

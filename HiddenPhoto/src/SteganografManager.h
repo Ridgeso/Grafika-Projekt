@@ -1,6 +1,7 @@
 #pragma once
 
 #include "HPpch.h"
+#include "Cryptor.h"
 
 class SteganografManager
 {
@@ -19,6 +20,6 @@ public:
 
 	bool IsReady() const;
 
-
+	std::pair<const Cryptor::Image, const Cryptor::Image> GetCryptorData() const;
 };
 
