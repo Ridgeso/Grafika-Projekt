@@ -19,12 +19,13 @@ namespace Cryptor
 		result.Width = refImage.Width;
 		result.Channel = refImage.Channel;
 
-		unsigned dataSize = result.Width * result.Height * 3;
+		unsigned stride = result.Channel;
+		unsigned dataSize = result.Width * result.Height * stride;
 
 		result.Data = new uint8_t[dataSize];
 		std::memcpy(result.Data, refImage.Data, dataSize);
 
-		for (unsigned i = 0; i < dataSize; i += 3)
+		for (unsigned i = 0; i < dataSize; i += stride)
 			result.Data[i] += encImage.Data[i] == 255 ? 1 : 0;
 
 		return result;
@@ -32,8 +33,33 @@ namespace Cryptor
 
 	Image CryptionManager::DecryptSteganograficznaImpl(std::pair<const Image, const Image> decrypt) const
 	{
-		// TODO: odkodowywanie zakodowanego zdjecia | Metoda 1
-		return (Image)0;
+		const Image& decImage = decrypt.first;
+		const Image& refImage = decrypt.second;
+
+		Image result = { .Width = 0, .Height = 0, .Channel = 0, .Data = nullptr };
+
+		if (CheckStegaInputData(decImage, refImage) != true)
+			return result;
+
+		result.Height = refImage.Height;
+		result.Width = refImage.Width;
+		result.Channel = refImage.Channel;
+
+		unsigned stride = result.Channel;
+		unsigned dataSize = result.Width * result.Height * stride;
+
+		result.Data = new uint8_t[dataSize];
+		
+		for (unsigned i = 0; i < dataSize; i += stride)
+		{
+			uint8_t pixelVal = decImage.Data[i] - refImage.Data[i];
+			pixelVal *= 255;
+
+			for (unsigned j = 0; j < stride; j++)
+				result.Data[i + j] = pixelVal;
+		}
+
+		return result;
 	}
 
 	std::pair<Image, Image> CryptionManager::EncryptKryptograficznaImpl(Image encrypt) const
