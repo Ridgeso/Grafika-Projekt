@@ -145,7 +145,11 @@ void HiddenPhotoFrame::OnLoadImages(wxCommandEvent& event)
             wxImage referenceImage;
             OpenImage(&referenceImage, "Otwórz plik referencyjny");
 
-            m_PhotoManager->SetSteganografImage(image, referenceImage, !decrypt);
+            bool allOk = m_PhotoManager->SetSteganografImage(image, referenceImage, !decrypt);
+            if (!allOk)
+            {
+                wxMessageBox(wxT("B³¹d wczytywania obrazów lub\nobrazy maj¹ ró¿ne rozmiary"), "Error", wxOK | wxICON_ERROR);
+            }
             break;
         }
         case EncryptionType::Kryptograficzna:
