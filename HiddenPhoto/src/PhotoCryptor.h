@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Cryptor.h"
+#include "SteganografManager.h"
 
 #include <wx/file.h>
 
@@ -44,6 +45,8 @@ namespace PhotoCryptor
 		
 		wxImage m_EncryptKryptografImage;
 		std::pair<wxImage, wxImage> m_DecryptKryptografImage;
+
+		SteganografManager stegaManager;
 	};
 
 }

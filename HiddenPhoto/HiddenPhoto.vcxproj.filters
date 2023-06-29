@@ -27,6 +27,9 @@
     <ClCompile Include="src\PhotoCryptor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\SteganografManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\HiddenPhotoFrame.h">
@@ -36,6 +39,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\PhotoCryptor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\SteganografManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
