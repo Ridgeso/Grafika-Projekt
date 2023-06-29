@@ -3,11 +3,13 @@
 #include "Cryptor.h"
 #include "SteganografManager.h"
 
-#include <wx/file.h>
+#include <wx/image.h>
 
 #include <memory>
 #include <stdint.h>
 #include <utility>
+
+#include "Cryptor.h"
 
 namespace PhotoCryptor
 {
@@ -29,15 +31,15 @@ namespace PhotoCryptor
 		void SetKryptografImage(const wxImage& newKryptografFisrt, const wxImage& newKryptografSecond);
 
 	public:
-		uint8_t* GetRealSteganografEncData() const;
-		void SetRealSteganografEncData(uint8_t* newData);
-		uint8_t* GetRealSteganografDecData() const;
-		void SetRealSteganografDecData(uint8_t* newData);
+		Cryptor::Image GetRealSteganografEncData() const;
+		void SetRealSteganografEncData(Cryptor::Image newData);
+		Cryptor::Image GetRealSteganografDecData() const;
+		void SetRealSteganografDecData(Cryptor::Image newData);
 
-		uint8_t* GetRealKryptografEncData() const;
-		void SetRealKryptografEncData(uint8_t* newData);
-		std::pair<uint8_t*, uint8_t*> GetRealKryptografDecData() const;
-		void SetRealKryptografDecData(std::pair<uint8_t*, uint8_t*> newData);
+		Cryptor::Image GetRealKryptografEncData() const;
+		void SetRealKryptografEncData(Cryptor::Image newData);
+		std::pair<Cryptor::Image, Cryptor::Image> GetRealKryptografDecData() const;
+		void SetRealKryptografDecData(std::pair<Cryptor::Image, Cryptor::Image> newData);
 
 		bool IsImageBlackAndWhite(const wxImage& image) const;
 		bool ConvertToBlackAndWhite(wxImage& image, uint8_t threshold) const;

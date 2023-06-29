@@ -99,6 +99,8 @@ HiddenPhotoFrame::HiddenPhotoFrame()
     // Events
     Bind(wxEVT_MENU, &HiddenPhotoFrame::OnExit, this, wxID_EXIT);
 
+    Bind(wxEVT_CHECKBOX, &HiddenPhotoFrame::OnEncryptionDecryptionChange, this, ID_CB_EncryptDecrypt);
+    Bind(wxEVT_COMBOBOX, &HiddenPhotoFrame::OnEbcryptionTypeChange, this, ID_CO_EncryptionType);
     Bind(wxEVT_BUTTON, &HiddenPhotoFrame::OnLoadImages, this, ID_BT_LoadImage);
     Bind(wxEVT_BUTTON, &HiddenPhotoFrame::OnStartEncryption, this, ID_BT_StartEncryption);
     Bind(wxEVT_BUTTON, &HiddenPhotoFrame::OnSaveToFile, this, ID_BT_SaveToFile);
@@ -111,7 +113,7 @@ void HiddenPhotoFrame::OnExit(wxCommandEvent& event)
     Close(true);
 }
 
-/*
+
 void HiddenPhotoFrame::OnEncryptionDecryptionChange(wxCommandEvent& event)
 {
     Repaint();
@@ -121,7 +123,6 @@ void HiddenPhotoFrame::OnEbcryptionTypeChange(wxCommandEvent& event)
 {
     Repaint();
 }
-*/
 
 void HiddenPhotoFrame::OnLoadImages(wxCommandEvent& event)
 {
@@ -263,8 +264,11 @@ void HiddenPhotoFrame::Repaint(bool mode)
                 const auto& [decrypt1, decrypt2] = m_PhotoManager->GetKryptografDecImage();
                 image = decrypt1;
 
-                wxBitmap bitmap(decrypt2);
-                dc.DrawBitmap(bitmap, s_MinWindowSize.x / 2, 0, true);
+                if (decrypt2.IsOk())
+                {
+                    wxBitmap bitmap(decrypt2);
+                    dc.DrawBitmap(bitmap, s_MinWindowSize.x / 2, 0, true);
+                }
             }
             else
                 image = m_PhotoManager->GetKryptografEncImage();
@@ -277,9 +281,12 @@ void HiddenPhotoFrame::Repaint(bool mode)
         return;
     }
 
-    dc.Clear();
-    wxBitmap bitmap(image);
-    dc.DrawBitmap(bitmap, 0, 0, true);
+    if (image.IsOk())
+    {
+        wxBitmap bitmap(image);
+        dc.Clear();
+        dc.DrawBitmap(bitmap, 0, 0, true);
+    }
 }
 
 void HiddenPhotoFrame::OpenImage(wxImage* const image, wxString dialogText)

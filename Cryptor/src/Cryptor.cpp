@@ -5,28 +5,28 @@
 namespace Cryptor
 {
 
-	uint8_t* CryptionManager::EncryptSteganograficznaImpl(uint8_t* encrypt) const
+	Image CryptionManager::EncryptSteganograficznaImpl(Image encrypt) const
 	{
 		// TODO: Zakodowywanie dobrego zdjecia | Metoda 1
-		return nullptr;
+		return (Image)0;
 	}
 
-	uint8_t* CryptionManager::DecryptSteganograficznaImpl(uint8_t* decrypt) const
+	Image CryptionManager::DecryptSteganograficznaImpl(Image decrypt) const
 	{
 		// TODO: odkodowywanie zakodowanego zdjecia | Metoda 1
-		return nullptr;
+		return (Image)0;
 	}
 
-	std::pair<uint8_t*, uint8_t*> CryptionManager::EncryptKryptograficznaImpl(uint8_t* encrypt) const
+	std::pair<Image, Image> CryptionManager::EncryptKryptograficznaImpl(Image encrypt) const
 	{
 		// TODO: Zakodowywanie dobrego zdjecia | Metoda 2
-		return std::pair<uint8_t*, uint8_t*>();
+		return std::pair<Image, Image>((Image)0, (Image)0);
 	}
 
-	uint8_t* CryptionManager::DecryptKryptograficznaImpl(std::pair<uint8_t*, uint8_t*> decrypt) const
+	Image CryptionManager::DecryptKryptograficznaImpl(std::pair<Image, Image> decrypt) const
 	{
 		// TODO: odkodowywanie zakodowanego zdjecia | Metoda 2
-		return nullptr;
+		return (Image)0;
 	}
 
 }
