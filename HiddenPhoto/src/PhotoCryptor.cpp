@@ -54,12 +54,12 @@ namespace PhotoCryptor
 		return m_DecryptKryptografImage;
 	}
 
-	void PhotoManager::SetKryptografImage(const wxImage& newKryptograf)
+	void PhotoManager::SetKryptografEncryptImage(const wxImage& newKryptograf)
 	{
 		m_EncryptKryptografImage = newKryptograf;
 	}
 
-	void PhotoManager::SetKryptografImage(const wxImage& newKryptografFisrt, const wxImage& newKryptografSecond)
+	void PhotoManager::SetKryptografDecryptImages(const wxImage& newKryptografFisrt, const wxImage& newKryptografSecond)
 	{
 		m_DecryptKryptografImage = std::make_pair(newKryptografFisrt, newKryptografSecond);
 	}

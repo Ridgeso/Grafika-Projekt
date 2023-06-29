@@ -166,13 +166,13 @@ void HiddenPhotoFrame::OnLoadImages(wxCommandEvent& event)
         case EncryptionType::Kryptograficzna:
         {
             if (!decrypt)
-                m_PhotoManager->SetKryptografImage(image);
+                m_PhotoManager->SetKryptografEncryptImage(image);
             else
             {
                 wxImage encrypted2;
                 OpenImage(&encrypted2);
 
-                m_PhotoManager->SetKryptografImage(image, encrypted2);
+                m_PhotoManager->SetKryptografDecryptImages(image, encrypted2);
             }
             break;
         }
