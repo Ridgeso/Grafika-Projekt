@@ -2,6 +2,7 @@
 
 #include "Cryptor.h"
 #include "SteganografManager.h"
+#include "KryptografManager.h"
 
 #include <wx/image.h>
 
@@ -30,6 +31,8 @@ namespace PhotoCryptor
 		const std::pair<wxImage, wxImage>& GetKryptografDecImage() const;
 		void SetKryptografImage(const wxImage& newKryptograf);
 		void SetKryptografImage(const wxImage& newKryptografFisrt, const wxImage& newKryptografSecond);
+		bool IsKryptografEncReady() const { return kryptografManager.IsEncryptionReady(); }
+		bool IsKryptografDecReady() const { return kryptografManager.IsDecryptionReady(); }
 
 	public:
 		std::pair<const Cryptor::Image, const Cryptor::Image> GetRealSteganografEncData() const;
@@ -54,6 +57,7 @@ namespace PhotoCryptor
 		std::pair<wxImage, wxImage> m_DecryptKryptografImage;
 
 		SteganografManager stegaManager;
+		KryptografManager kryptografManager;
 	};
 
 }
