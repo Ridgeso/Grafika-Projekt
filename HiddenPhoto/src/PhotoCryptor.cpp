@@ -54,14 +54,32 @@ namespace PhotoCryptor
 		return m_DecryptKryptografImage;
 	}
 
-	void PhotoManager::SetKryptografEncryptImage(const wxImage& newKryptograf)
+	bool PhotoManager::SetKryptografEncryptImage(const wxImage& newKryptograf)
 	{
 		m_EncryptKryptografImage = newKryptograf;
+		bool imageOk = kryptografManager.SetImageForEncryption(&m_EncryptKryptografImage);
+		if (!imageOk)
+		{
+			kryptografManager.SetDefault();
+			m_EncryptKryptografImage = wxImage();
+			m_DecryptKryptografImage = std::make_pair(wxImage(), wxImage());
+			return false;
+		}
+		return true;
 	}
 
-	void PhotoManager::SetKryptografDecryptImages(const wxImage& newKryptografFisrt, const wxImage& newKryptografSecond)
+	bool PhotoManager::SetKryptografDecryptImages(const wxImage& newKryptografFisrt, const wxImage& newKryptografSecond)
 	{
 		m_DecryptKryptografImage = std::make_pair(newKryptografFisrt, newKryptografSecond);
+		bool imagesOk = kryptografManager.SetImagesForDecryption(&m_DecryptKryptografImage.first, &m_DecryptKryptografImage.second);
+		if (!imagesOk)
+		{
+			kryptografManager.SetDefault();
+			m_DecryptKryptografImage = std::make_pair(wxImage(), wxImage());
+			m_EncryptKryptografImage = wxImage();
+			return false;
+		}
+		return true;
 	}
 
 	std::pair<const Cryptor::Image, const Cryptor::Image> PhotoManager::GetRealSteganografEncData() const
