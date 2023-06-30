@@ -106,13 +106,7 @@ namespace PhotoCryptor
 
 	Cryptor::Image PhotoManager::GetRealKryptografEncData() const
 	{
-		Cryptor::Image image = {
-			m_EncryptKryptografImage.GetWidth(),
-			m_EncryptKryptografImage.GetHeight(),
-			m_EncryptKryptografImage.HasAlpha() ? 4 : 3,
-			m_EncryptKryptografImage.GetData()
-		};
-		return image;
+		return kryptografManager.GetCryptorData();
 	}
 
 	void PhotoManager::SetRealKryptografEncData(Cryptor::Image newData)
@@ -123,19 +117,7 @@ namespace PhotoCryptor
 
 	std::pair<Cryptor::Image, Cryptor::Image> PhotoManager::GetRealKryptografDecData() const
 	{
-		Cryptor::Image imageFirst = {
-			m_DecryptKryptografImage.first.GetWidth(),
-			m_DecryptKryptografImage.first.GetHeight(),
-			m_DecryptKryptografImage.first.HasAlpha() ? 4 : 3,
-			m_DecryptKryptografImage.first.GetData()
-		};
-		Cryptor::Image imageSecond = {
-			m_DecryptKryptografImage.second.GetWidth(),
-			m_DecryptKryptografImage.second.GetHeight(),
-			m_DecryptKryptografImage.second.HasAlpha() ? 4 : 3,
-			m_DecryptKryptografImage.second.GetData()
-		};
-		return std::make_pair(imageFirst, imageSecond);
+		return kryptografManager.GetDecryptorData();
 	}
 
 	void PhotoManager::SetRealKryptografDecData(std::pair<Cryptor::Image, Cryptor::Image> newData)
