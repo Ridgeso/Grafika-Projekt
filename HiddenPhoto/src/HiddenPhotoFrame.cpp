@@ -165,14 +165,22 @@ void HiddenPhotoFrame::OnLoadImages(wxCommandEvent& event)
         }
         case EncryptionType::Kryptograficzna:
         {
+            bool allOk;
             if (!decrypt)
-                m_PhotoManager->SetKryptografEncryptImage(image);
+            {
+                allOk = m_PhotoManager->SetKryptografEncryptImage(image);
+            }
             else
             {
                 wxImage encrypted2;
                 OpenImage(&encrypted2);
 
-                m_PhotoManager->SetKryptografDecryptImages(image, encrypted2);
+                allOk = m_PhotoManager->SetKryptografDecryptImages(image, encrypted2);
+            }
+
+            if (!allOk)
+            {
+                wxMessageBox(wxT("B³¹d wczytywania obrazów!"), "Error", wxOK | wxICON_ERROR);
             }
             break;
         }
