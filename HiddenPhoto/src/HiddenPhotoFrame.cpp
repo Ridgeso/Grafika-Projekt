@@ -128,16 +128,20 @@ void HiddenPhotoFrame::OnExit(wxCommandEvent& event)
 
 void HiddenPhotoFrame::OnEncryptionDecryptionChange(wxCommandEvent& event)
 {
+    m_PhotoManager->Reset();
     Repaint();
 }
 
 void HiddenPhotoFrame::OnEbcryptionTypeChange(wxCommandEvent& event)
 {
+    m_PhotoManager->Reset();
     Repaint();
 }
 
 void HiddenPhotoFrame::OnLoadImages(wxCommandEvent& event)
 {
+    m_PhotoManager->Reset();
+
     wxImage image;
     OpenImage(&image);
     if (!image.IsOk())
