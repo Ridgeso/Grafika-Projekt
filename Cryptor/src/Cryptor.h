@@ -106,6 +106,7 @@ namespace Cryptor
 		bool CheckKryptoInputData(const Image& image1, const Image& image2) const;
 		bool AreDimensionsEqual(const Image& image1, const Image& image2) const;
 		void InsertValueInPos(unsigned y, unsigned x, Image& image, uint8_t value) const;
+		uint8_t GetValueAtPos(unsigned y, unsigned x, const Image& image) const;
 	};
 
 }

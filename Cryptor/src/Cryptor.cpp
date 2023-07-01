@@ -134,10 +134,11 @@ namespace Cryptor
 		if (CheckKryptoInputData(first, second) != true)
 			return decrypted;
 
-		unsigned encryptedSize = first.Height * first.Width * first.Channel;
+		int stride = first.Channel;
+		unsigned encryptedSize = first.Height * first.Width * stride;
 		unsigned decryptedSize = encryptedSize / 4;
 
-		uint8_t* decryptedBig = new uint8_t[encryptedSize];
+		uint8_t* dataDecryptedBig = new uint8_t[encryptedSize];
 		for (unsigned i = 0; i < encryptedSize; i++)
 		{
 			unsigned val = first.Data[i] + second.Data[i];
@@ -147,12 +148,30 @@ namespace Cryptor
 				val = 255;
 			else	//randomize to avoid any uninitialized memory
 				val = rand();	
-			decryptedBig[i] = (uint8_t)val;
+			dataDecryptedBig[i] = (uint8_t)val;
+		}
+		const Image decryptedBig = { .Width = first.Width, .Height = first.Height, .Channel = stride, .Data = dataDecryptedBig };
+
+		int decryptedWidth = first.Width / 2, decryptedHeight = first.Height / 2;
+
+		uint8_t* dataDecrypted = new uint8_t[decryptedSize];
+		for (unsigned i = 0; i < decryptedSize / stride; i++)
+		{
+			unsigned x = (i % decryptedWidth) * 2;
+			unsigned y = (i / decryptedWidth) * 2;
+
+			uint8_t val = GetValueAtPos(y, x, decryptedBig);
+
+			for (int j = 0; j < stride; j++)
+			{
+				dataDecrypted[i * stride + j] = val;
+			}
 		}
 
-		decrypted = { .Width = first.Width, .Height = first.Height, .Channel = first.Channel, .Data = decryptedBig };
+		delete[] dataDecryptedBig;
+
+		decrypted = { .Width = decryptedWidth , .Height = decryptedHeight, .Channel = stride, .Data = dataDecrypted };
 		return decrypted;
-		//delete[] decryptedBig;
 	}
 
 	bool CryptionManager::CheckStegaInputData(const Image& src, const Image& ref) const
@@ -194,4 +213,13 @@ namespace Cryptor
 		}
 	}
 
+	uint8_t CryptionManager::GetValueAtPos(unsigned y, unsigned x, const Image& image) const
+	{
+		if (image.Data == nullptr || y >= image.Height || x >= image.Width)
+			return 0;
+
+		int pos = (y * image.Width + x) * image.Channel;
+
+		return image.Data[pos];
+	}
 }
