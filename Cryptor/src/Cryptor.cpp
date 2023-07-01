@@ -133,9 +133,25 @@ namespace Cryptor
 
 	bool CryptionManager::CheckStegaInputData(const Image& src, const Image& ref) const
 	{
-		if((src.Width != ref.Width) || (src.Height != ref.Height) || (src.Channel != ref.Channel))
+		if(AreDimensionsEqual(src, ref) != true);
 			return false;
 		if (src.Data == nullptr || ref.Data == nullptr)
+			return false;
+		return true;
+	}
+
+	bool CryptionManager::CheckKryptoInputData(const Image& image1, const Image& image2) const
+	{
+		if(AreDimensionsEqual(image1, image2) != true)
+			return false;
+		if (image1.Data == nullptr || image2.Data == nullptr)
+			return false;
+		return true;
+	}
+
+	bool CryptionManager::AreDimensionsEqual(const Image& image1, const Image& image2) const
+	{
+		if ((image1.Width != image2.Width) || (image1.Height != image2.Height) || (image1.Channel != image2.Channel))
 			return false;
 		return true;
 	}
