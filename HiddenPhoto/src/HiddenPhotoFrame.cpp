@@ -392,7 +392,9 @@ void HiddenPhotoFrame::Repaint(bool mode)
             break;
         }
     }
-    
+
+    dc.Clear();
+
     if (image.IsOk() != true)
     {
         return;
@@ -401,7 +403,6 @@ void HiddenPhotoFrame::Repaint(bool mode)
     if (image.IsOk())
     {
         wxBitmap bitmap(image);
-        dc.Clear();
         dc.DrawBitmap(bitmap, 0, 0, true);
     }
 }
