@@ -22,25 +22,20 @@ HiddenPhotoFrame::HiddenPhotoFrame()
     m_BS_ToolBox = new wxBoxSizer(wxVERTICAL);
     m_BS_MainLayout->Add(m_BS_ToolBox, 0, wxEXPAND | wxALL, 5);
 
-    m_CB_EncryptDecrypt = new wxCheckBox(
+    m_ST_EncryptionTypeLabel = new wxStaticText(
         this,
-        ID_CB_EncryptDecrypt,
-        _("Dekodowanie"),
-        wxPoint(0, 0),
-        wxSize(75, 30),
-        0,
-        wxDefaultValidator,
-        _("m_CB_EncryptDecrypt")
+        ID_ST_EncryptionTypeLabel,
+        _("Metoda kodowania:")
     );
-    m_BS_ToolBox->Add(m_CB_EncryptDecrypt, 0, wxALIGN_CENTER | wxALL, 5);
-    
+    m_BS_ToolBox->Add(m_ST_EncryptionTypeLabel, 0, wxALIGN_CENTER | wxALL, 0);
+
     const wxString encryptionOptions[] = { _("Steganograficzna"), _("Kryptograficzna") };
     m_CO_EncryptionType = new wxComboBox(
         this,
         ID_CO_EncryptionType,
         encryptionOptions[0],
         wxPoint(0, 0),
-        wxSize(125, 20),
+        wxSize(125, 30),
         { 2, encryptionOptions },
         0,
         wxDefaultValidator,
@@ -48,7 +43,19 @@ HiddenPhotoFrame::HiddenPhotoFrame()
     );
     m_CO_EncryptionType->SetSelection(0);
     m_BS_ToolBox->Add(m_CO_EncryptionType, 0, wxALIGN_CENTER | wxALL, 5);
-    
+
+    m_CB_EncryptDecrypt = new wxCheckBox(
+        this,
+        ID_CB_EncryptDecrypt,
+        _("Dekodowanie"),
+        wxPoint(0, 0),
+        wxSize(100, 30),
+        0,
+        wxDefaultValidator,
+        _("m_CB_EncryptDecrypt")
+    );
+    m_BS_ToolBox->Add(m_CB_EncryptDecrypt, 0, wxALIGN_CENTER | wxALL, 5);
+
     m_BT_LoadImage = new wxButton(
         this,
         ID_BT_LoadImage,

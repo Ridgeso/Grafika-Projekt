@@ -32,6 +32,7 @@ private:
     enum EntityID
     {
         ID_HiddenPhoto = 1001,
+        ID_ST_EncryptionTypeLabel,
         ID_CB_EncryptDecrypt,
         ID_CO_EncryptionType,
         ID_BT_LoadImage,
@@ -49,9 +50,11 @@ private:
     wxBoxSizer* m_BS_ToolBox;
     wxBoxSizer* m_BS_StartSave;
 
-    wxCheckBox* m_CB_EncryptDecrypt;
+    wxStaticText* m_ST_EncryptionTypeLabel;
     wxComboBox* m_CO_EncryptionType;
+    wxCheckBox* m_CB_EncryptDecrypt;
     wxButton* m_BT_LoadImage;
+
     wxButton* m_BT_StartEncryption;
     wxButton* m_BT_SaveToFile;
 
