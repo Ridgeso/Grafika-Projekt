@@ -418,7 +418,7 @@ void HiddenPhotoFrame::OpenImage(wxImage* const image, wxString dialogText)
 
     wxString imagePath = loadFileDialog.GetPath();
     if (!image->LoadFile(imagePath))
-        wxMessageBox(wxT("Nie uda³o siê wczytaæ plik."), "Error", wxOK | wxICON_ERROR);
+        wxMessageBox(wxT("Nie uda³o siê wczytaæ pliku."), "Error", wxOK | wxICON_ERROR);
 }
 
 wxString HiddenPhotoFrame::GetLoadedImagesString()
