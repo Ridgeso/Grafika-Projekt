@@ -161,4 +161,15 @@ namespace PhotoCryptor
 		}
 		return true;
 	}
+	void PhotoManager::Reset()
+	{
+		stegaManager.SetDefault();
+		m_EncryptSteganografImage = wxImage();
+		m_DecryptSteganografImage = wxImage();
+		m_ReferenceSteganografImage = wxImage();
+
+		kryptografManager.SetDefault();
+		m_DecryptKryptografImage = std::make_pair(wxImage(), wxImage());
+		m_EncryptKryptografImage = wxImage();
+	}
 }

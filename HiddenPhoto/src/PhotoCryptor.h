@@ -48,6 +48,8 @@ namespace PhotoCryptor
 		bool IsImageBlackAndWhite(const wxImage& image) const;
 		bool ConvertToBlackAndWhite(wxImage& image, uint8_t threshold) const;
 
+		void Reset();
+
 	private:
 		wxImage m_EncryptSteganografImage;
 		wxImage m_DecryptSteganografImage;
