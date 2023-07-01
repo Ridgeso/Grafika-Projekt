@@ -71,7 +71,7 @@ HiddenPhotoFrame::HiddenPhotoFrame()
     m_ST_LoadedImagesLabel = new wxStaticText(
         this,
         ID_ST_LoadedImagesLabel,
-        _("Loaded Images:")
+        _("Za³adowane obrazy:")
     );
     m_BS_ToolBox->Add(m_ST_LoadedImagesLabel, 0, wxALIGN_CENTER | wxALL, 10);
 
