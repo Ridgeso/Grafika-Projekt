@@ -56,7 +56,11 @@ namespace Cryptor
 			pixelVal *= 255;
 
 			for (unsigned j = 0; j < stride; j++)
+			{
+				if (i + j >= dataSize)	//this condition is to remove buffer overrun warning, the condition itself should never be true
+					break;
 				result.Data[i + j] = pixelVal;
+			}
 		}
 
 		return result;
