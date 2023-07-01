@@ -325,6 +325,12 @@ void HiddenPhotoFrame::OnSaveToFile(wxCommandEvent& event)
 
 void HiddenPhotoFrame::SaveImageToFile(const wxImage& image, wxString dialogName)
 {
+    if (image.IsOk() != true)
+    {
+        wxMessageBox(wxT("B³¹d zapisu - obraz uszkodzony."), "Error", wxOK | wxICON_ERROR);
+        return;
+    }
+
     wxFileDialog saveFileDialog(
         this,
         dialogName,
