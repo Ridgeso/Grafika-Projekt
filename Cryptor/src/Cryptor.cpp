@@ -176,7 +176,7 @@ namespace Cryptor
 
 	bool CryptionManager::CheckStegaInputData(const Image& src, const Image& ref) const
 	{
-		if(AreDimensionsEqual(src, ref) != true);
+		if (AreDimensionsEqual(src, ref) == false)
 			return false;
 		if (src.Data == nullptr || ref.Data == nullptr)
 			return false;
