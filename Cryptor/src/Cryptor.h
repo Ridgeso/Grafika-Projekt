@@ -31,7 +31,7 @@ namespace Cryptor
 
 		void SetKryptografEncData(Image newData)
 		{
-			static_cast<Derrived*>(this)->SetRealSteganografEncData(newData);
+			static_cast<Derrived*>(this)->SetRealKryptografEncData(newData);
 		}
 
 		std::pair<const Image, const Image> GetSteganografDecData() const

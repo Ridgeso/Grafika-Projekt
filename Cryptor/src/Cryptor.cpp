@@ -127,8 +127,32 @@ namespace Cryptor
 
 	Image CryptionManager::DecryptKryptograficznaImpl(std::pair<Image, Image> decrypt) const
 	{
-		// TODO: odkodowywanie zakodowanego zdjecia | Metoda 2
-		return (Image)0;
+		Image& first = decrypt.first;
+		Image& second = decrypt.second;
+		Image decrypted = { .Width = 0, .Height = 0, .Channel = 0, .Data = nullptr };
+		
+		if (CheckKryptoInputData(first, second) != true)
+			return decrypted;
+
+		unsigned encryptedSize = first.Height * first.Width * first.Channel;
+		unsigned decryptedSize = encryptedSize / 4;
+
+		uint8_t* decryptedBig = new uint8_t[encryptedSize];
+		for (unsigned i = 0; i < encryptedSize; i++)
+		{
+			unsigned val = first.Data[i] + second.Data[i];
+			if (val == 0xFF)	//black pixel (different blocks)
+				val = 0;
+			else if (val == 0 || val == 2 * 0xFF)	//white pixel (identical blocks)
+				val = 255;
+			else	//randomize to avoid any uninitialized memory
+				val = rand();	
+			decryptedBig[i] = (uint8_t)val;
+		}
+
+		decrypted = { .Width = first.Width, .Height = first.Height, .Channel = first.Channel, .Data = decryptedBig };
+		return decrypted;
+		//delete[] decryptedBig;
 	}
 
 	bool CryptionManager::CheckStegaInputData(const Image& src, const Image& ref) const
