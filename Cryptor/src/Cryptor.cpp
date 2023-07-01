@@ -68,8 +68,28 @@ namespace Cryptor
 
 	std::pair<Image, Image> CryptionManager::EncryptKryptograficznaImpl(Image encrypt) const
 	{
-		// TODO: Zakodowywanie dobrego zdjecia | Metoda 2
-		return std::pair<Image, Image>((Image)0, (Image)0);
+		Image first = { .Width = 0, .Height = 0, .Channel = 0, .Data = nullptr };
+		Image second = { .Width = 0, .Height = 0, .Channel = 0, .Data = nullptr };
+
+		if (encrypt.Data = nullptr)
+			return std::make_pair(first, second);
+
+		int stride = encrypt.Channel;
+		unsigned originalSize = encrypt.Height * encrypt.Width * stride;
+
+		uint8_t* dataFirst = new uint8_t[originalSize * 4];
+		uint8_t* dataSecond = new uint8_t[originalSize * 4];
+
+		first = { .Width = encrypt.Width * 2, .Height = encrypt.Height * 2, .Channel = stride, .Data = dataFirst };
+		second = { .Width = encrypt.Width * 2, .Height = encrypt.Height * 2, .Channel = stride, .Data = dataSecond };
+
+		for (unsigned i = 0; i < originalSize; i += stride)
+		{
+			//TODO encoding
+		}
+
+		std::pair<Image, Image> result(first, second);
+		return result;
 	}
 
 	Image CryptionManager::DecryptKryptograficznaImpl(std::pair<Image, Image> decrypt) const
