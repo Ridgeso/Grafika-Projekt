@@ -103,6 +103,7 @@ namespace Cryptor
 	private:
 
 		bool CheckStegaInputData(const Image& src, const Image& ref) const;
+		void InsertValueInPos(unsigned y, unsigned x, Image& image, uint8_t value) const;
 	};
 
 }
