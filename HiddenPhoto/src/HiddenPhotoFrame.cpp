@@ -68,6 +68,13 @@ HiddenPhotoFrame::HiddenPhotoFrame()
     );
     m_BS_ToolBox->Add(m_BT_LoadImage, 0, wxALIGN_CENTER | wxALL, 5);
 
+    m_ST_LoadedImagesLabel = new wxStaticText(
+        this,
+        ID_ST_LoadedImagesLabel,
+        _("Loaded Images:")
+    );
+    m_BS_ToolBox->Add(m_ST_LoadedImagesLabel, 0, wxALIGN_CENTER | wxALL, 10);
+
     m_BS_StartSave = new wxBoxSizer(wxHORIZONTAL);
     m_BS_ToolBox->Add(m_BS_StartSave, 1, wxEXPAND | wxALL, 5);
 
@@ -337,6 +344,8 @@ void HiddenPhotoFrame::SaveImageToFile(const wxImage& image, wxString dialogName
 
 void HiddenPhotoFrame::Repaint(bool mode)
 {
+    m_ST_LoadedImagesLabel->SetLabelText(GetLoadedImagesString());
+
     wxClientDC dc(m_P_Picture);
     m_P_Picture->PrepareDC(dc);
     wxImage image;
@@ -410,4 +419,39 @@ void HiddenPhotoFrame::OpenImage(wxImage* const image, wxString dialogText)
     wxString imagePath = loadFileDialog.GetPath();
     if (!image->LoadFile(imagePath))
         wxMessageBox(wxT("Nie uda³o siê wczytaæ plik."), "Error", wxOK | wxICON_ERROR);
+}
+
+wxString HiddenPhotoFrame::GetLoadedImagesString()
+{
+    wxString text = "Za³adowane obrazy:\n";
+
+    bool stegaEnc = m_PhotoManager->GetSteganografEncImage().IsOk();
+    bool stegaDec = m_PhotoManager->GetSteganografDecImage().IsOk();
+    bool stegaRef = m_PhotoManager->GetSteganografRefImage().IsOk();
+    bool kryptoEnc = m_PhotoManager->GetKryptografEncImage().IsOk();
+    bool kryptoDec1 = m_PhotoManager->GetKryptografDecImage().first.IsOk();
+    bool kryptoDec2 = m_PhotoManager->GetKryptografDecImage().second.IsOk();
+
+    if (stegaEnc || stegaDec || stegaRef)
+    {
+        text.append("met. steganograficzna:\n");
+        if (stegaEnc)
+            text.append(" - obraz Ÿród³owy\n");
+        if (stegaDec)
+            text.append(" - obraz zakodowany\n");
+        if (stegaRef)
+            text.append(" - obraz referencyjny\n");
+    }
+
+    if (kryptoEnc || kryptoDec1 || kryptoDec2)
+    {
+        text.append("met. kryptograficzna:\n");
+        if (kryptoEnc)
+            text.append(" - obraz Ÿród³owy\n");
+        if (kryptoDec1)
+            text.append(" - obraz zakodowany 1\n");
+        if (kryptoDec2)
+            text.append(" - obraz zakodowany 2\n");
+    }
+    return text;
 }

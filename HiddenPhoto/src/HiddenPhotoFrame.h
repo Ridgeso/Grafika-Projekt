@@ -28,6 +28,8 @@ private:
     void Repaint(bool mode = false);
     void OpenImage(wxImage* const image, wxString dialogText = "Otwórz plik");
 
+    wxString GetLoadedImagesString();
+
 private:
     enum EntityID
     {
@@ -36,6 +38,7 @@ private:
         ID_CB_EncryptDecrypt,
         ID_CO_EncryptionType,
         ID_BT_LoadImage,
+        ID_ST_LoadedImagesLabel,
         ID_BT_StartEncryption,
         ID_BT_SaveToFile,
         ID_P_Picture
@@ -54,6 +57,7 @@ private:
     wxComboBox* m_CO_EncryptionType;
     wxCheckBox* m_CB_EncryptDecrypt;
     wxButton* m_BT_LoadImage;
+    wxStaticText* m_ST_LoadedImagesLabel;
 
     wxButton* m_BT_StartEncryption;
     wxButton* m_BT_SaveToFile;
