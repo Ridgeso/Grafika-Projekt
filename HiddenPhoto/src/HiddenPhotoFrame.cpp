@@ -7,8 +7,7 @@
 const wxSize HiddenPhotoFrame::s_MinWindowSize = { 1280, 720};
 
 HiddenPhotoFrame::HiddenPhotoFrame()
-    : wxFrame(nullptr, ID_HiddenPhoto, "Hidden Photo | Graphics Lab Project"),
-    m_SteganoImage(), m_KryptoImage{}
+    : wxFrame(nullptr, ID_HiddenPhoto, "Hidden Photo | Graphics Lab Project")
 {
     m_PhotoManager = std::make_unique<PhotoCryptor::PhotoManager>();
     m_CryptionManager= std::make_unique<Cryptor::CryptionManager>();
