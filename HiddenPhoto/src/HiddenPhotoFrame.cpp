@@ -7,8 +7,7 @@
 const wxSize HiddenPhotoFrame::s_MinWindowSize = { 1280, 720};
 
 HiddenPhotoFrame::HiddenPhotoFrame()
-    : wxFrame(nullptr, ID_HiddenPhoto, "Hidden Photo | Graphics Lab Project"),
-    m_SteganoImage(), m_KryptoImage{}
+    : wxFrame(nullptr, ID_HiddenPhoto, "Hidden Photo | Graphics Lab Project")
 {
     m_PhotoManager = std::make_unique<PhotoCryptor::PhotoManager>();
     m_CryptionManager= std::make_unique<Cryptor::CryptionManager>();
@@ -23,25 +22,20 @@ HiddenPhotoFrame::HiddenPhotoFrame()
     m_BS_ToolBox = new wxBoxSizer(wxVERTICAL);
     m_BS_MainLayout->Add(m_BS_ToolBox, 0, wxEXPAND | wxALL, 5);
 
-    m_CB_EncryptDecrypt = new wxCheckBox(
+    m_ST_EncryptionTypeLabel = new wxStaticText(
         this,
-        ID_CB_EncryptDecrypt,
-        _("Dekodowanie"),
-        wxPoint(0, 0),
-        wxSize(75, 30),
-        0,
-        wxDefaultValidator,
-        _("m_CB_EncryptDecrypt")
+        ID_ST_EncryptionTypeLabel,
+        _("Metoda kodowania:")
     );
-    m_BS_ToolBox->Add(m_CB_EncryptDecrypt, 0, wxALIGN_CENTER | wxALL, 5);
-    
+    m_BS_ToolBox->Add(m_ST_EncryptionTypeLabel, 0, wxALIGN_CENTER | wxALL, 0);
+
     const wxString encryptionOptions[] = { _("Steganograficzna"), _("Kryptograficzna") };
     m_CO_EncryptionType = new wxComboBox(
         this,
         ID_CO_EncryptionType,
         encryptionOptions[0],
         wxPoint(0, 0),
-        wxSize(125, 20),
+        wxSize(125, 30),
         { 2, encryptionOptions },
         0,
         wxDefaultValidator,
@@ -49,7 +43,19 @@ HiddenPhotoFrame::HiddenPhotoFrame()
     );
     m_CO_EncryptionType->SetSelection(0);
     m_BS_ToolBox->Add(m_CO_EncryptionType, 0, wxALIGN_CENTER | wxALL, 5);
-    
+
+    m_CB_EncryptDecrypt = new wxCheckBox(
+        this,
+        ID_CB_EncryptDecrypt,
+        _("Dekodowanie"),
+        wxPoint(0, 0),
+        wxSize(100, 30),
+        0,
+        wxDefaultValidator,
+        _("m_CB_EncryptDecrypt")
+    );
+    m_BS_ToolBox->Add(m_CB_EncryptDecrypt, 0, wxALIGN_CENTER | wxALL, 5);
+
     m_BT_LoadImage = new wxButton(
         this,
         ID_BT_LoadImage,
@@ -61,6 +67,13 @@ HiddenPhotoFrame::HiddenPhotoFrame()
         _("m_BT_LoadImage")
     );
     m_BS_ToolBox->Add(m_BT_LoadImage, 0, wxALIGN_CENTER | wxALL, 5);
+
+    m_ST_LoadedImagesLabel = new wxStaticText(
+        this,
+        ID_ST_LoadedImagesLabel,
+        _("Za³adowane obrazy:")
+    );
+    m_BS_ToolBox->Add(m_ST_LoadedImagesLabel, 0, wxALIGN_CENTER | wxALL, 10);
 
     m_BS_StartSave = new wxBoxSizer(wxHORIZONTAL);
     m_BS_ToolBox->Add(m_BS_StartSave, 1, wxEXPAND | wxALL, 5);
@@ -115,20 +128,26 @@ void HiddenPhotoFrame::OnExit(wxCommandEvent& event)
 
 void HiddenPhotoFrame::OnEncryptionDecryptionChange(wxCommandEvent& event)
 {
+    m_PhotoManager->Reset();
     Repaint();
 }
 
 void HiddenPhotoFrame::OnEbcryptionTypeChange(wxCommandEvent& event)
 {
+    m_PhotoManager->Reset();
     Repaint();
 }
 
 void HiddenPhotoFrame::OnLoadImages(wxCommandEvent& event)
 {
+    m_PhotoManager->Reset();
+
     wxImage image;
     OpenImage(&image);
     if (!image.IsOk())
         return;
+
+    const uint8_t whiteThreshold = 180;
 
     //true if decrypting, false if encrypting
     bool decrypt = m_CB_EncryptDecrypt->GetValue();
@@ -156,7 +175,7 @@ void HiddenPhotoFrame::OnLoadImages(wxCommandEvent& event)
                 if (m_PhotoManager->IsImageBlackAndWhite(image) != true)
                 {
                     wxMessageBox(wxT("Obraz do zakodowania zostanie przetransformowany na czarno-bia³y."), "Error", wxOK | wxICON_INFORMATION);
-                    m_PhotoManager->ConvertToBlackAndWhite(image, 180);
+                    m_PhotoManager->ConvertToBlackAndWhite(image, whiteThreshold);
                     //check is not needed here as it was performed earlier
                     m_PhotoManager->SetSteganografImage(image, referenceImage, !decrypt);
                 }
@@ -165,14 +184,27 @@ void HiddenPhotoFrame::OnLoadImages(wxCommandEvent& event)
         }
         case EncryptionType::Kryptograficzna:
         {
+            bool allOk;
             if (!decrypt)
-                m_PhotoManager->SetKryptografImage(image);
+            {
+                if (m_PhotoManager->IsImageBlackAndWhite(image) != true)
+                {
+                    wxMessageBox(wxT("Obraz do zakodowania zostanie przetransformowany na czarno-bia³y."), "Error", wxOK | wxICON_INFORMATION);
+                    m_PhotoManager->ConvertToBlackAndWhite(image, whiteThreshold);
+                }
+                allOk = m_PhotoManager->SetKryptografEncryptImage(image);
+            }
             else
             {
                 wxImage encrypted2;
                 OpenImage(&encrypted2);
 
-                m_PhotoManager->SetKryptografImage(image, encrypted2);
+                allOk = m_PhotoManager->SetKryptografDecryptImages(image, encrypted2);
+            }
+
+            if (!allOk)
+            {
+                wxMessageBox(wxT("B³¹d wczytywania obrazów!"), "Error", wxOK | wxICON_ERROR);
             }
             break;
         }
@@ -183,6 +215,8 @@ void HiddenPhotoFrame::OnLoadImages(wxCommandEvent& event)
 
 void HiddenPhotoFrame::OnStartEncryption(wxCommandEvent& event)
 {
+    bool decrypt = m_CB_EncryptDecrypt->GetValue();
+
     switch (m_CO_EncryptionType->GetSelection())
     {
         case wxNOT_FOUND:
@@ -193,7 +227,7 @@ void HiddenPhotoFrame::OnStartEncryption(wxCommandEvent& event)
         case EncryptionType::Steganograficzna:
         {
             bool allOk = true;
-            if (!m_CB_EncryptDecrypt->GetValue())
+            if (!decrypt)
             {
                 if (m_PhotoManager->GetSteganografEncImage().IsOk() && m_PhotoManager->IsSteganografReady())
                     m_CryptionManager->EncryptSteganograficzna(*m_PhotoManager);
@@ -213,16 +247,26 @@ void HiddenPhotoFrame::OnStartEncryption(wxCommandEvent& event)
         }
         case EncryptionType::Kryptograficzna:
         {
-            if (!m_CB_EncryptDecrypt->GetValue())
+            bool allOk = true;
+            if (!decrypt)
             {
-                if (m_PhotoManager->GetKryptografEncImage().IsOk())
+                if (m_PhotoManager->GetKryptografEncImage().IsOk() && m_PhotoManager->IsKryptografEncReady())
                     m_CryptionManager->EncryptKryptograficzna(*m_PhotoManager);
+                else
+                    allOk = false;
             }
             else
             {
-                auto& validatorKryptografDec = m_PhotoManager->GetKryptografDecImage();
-                if (validatorKryptografDec.first.IsOk() && validatorKryptografDec.second.IsOk())
+                auto& decryptImages = m_PhotoManager->GetKryptografDecImage();
+                if (decryptImages.first.IsOk() && decryptImages.second.IsOk() && m_PhotoManager->IsKryptografDecReady())
                     m_CryptionManager->DecryptKryptograficzna(*m_PhotoManager);
+                else
+                    allOk = false;
+            }
+
+            if (!allOk)
+            {
+                wxMessageBox(wxT("Operacja nie mog³a zostaæ rozpoczêta.\nUpewnij siê, ¿e obrazy s¹ za³adowane odpowiednio."), "Error", wxOK | wxICON_ERROR);
             }
             break;
         }
@@ -285,6 +329,12 @@ void HiddenPhotoFrame::OnSaveToFile(wxCommandEvent& event)
 
 void HiddenPhotoFrame::SaveImageToFile(const wxImage& image, wxString dialogName)
 {
+    if (image.IsOk() != true)
+    {
+        wxMessageBox(wxT("B³¹d zapisu - obraz uszkodzony."), "Error", wxOK | wxICON_ERROR);
+        return;
+    }
+
     wxFileDialog saveFileDialog(
         this,
         dialogName,
@@ -304,6 +354,8 @@ void HiddenPhotoFrame::SaveImageToFile(const wxImage& image, wxString dialogName
 
 void HiddenPhotoFrame::Repaint(bool mode)
 {
+    m_ST_LoadedImagesLabel->SetLabelText(GetLoadedImagesString());
+
     wxClientDC dc(m_P_Picture);
     m_P_Picture->PrepareDC(dc);
     wxImage image;
@@ -340,7 +392,9 @@ void HiddenPhotoFrame::Repaint(bool mode)
             break;
         }
     }
-    
+
+    dc.Clear();
+
     if (image.IsOk() != true)
     {
         return;
@@ -349,7 +403,6 @@ void HiddenPhotoFrame::Repaint(bool mode)
     if (image.IsOk())
     {
         wxBitmap bitmap(image);
-        dc.Clear();
         dc.DrawBitmap(bitmap, 0, 0, true);
     }
 }
@@ -376,5 +429,40 @@ void HiddenPhotoFrame::OpenImage(wxImage* const image, wxString dialogText)
 
     wxString imagePath = loadFileDialog.GetPath();
     if (!image->LoadFile(imagePath))
-        wxMessageBox(wxT("Nie uda³o siê wczytaæ plik."), "Error", wxOK | wxICON_ERROR);
+        wxMessageBox(wxT("Nie uda³o siê wczytaæ pliku."), "Error", wxOK | wxICON_ERROR);
+}
+
+wxString HiddenPhotoFrame::GetLoadedImagesString()
+{
+    wxString text = "Za³adowane obrazy:\n";
+
+    bool stegaEnc = m_PhotoManager->GetSteganografEncImage().IsOk();
+    bool stegaDec = m_PhotoManager->GetSteganografDecImage().IsOk();
+    bool stegaRef = m_PhotoManager->GetSteganografRefImage().IsOk();
+    bool kryptoEnc = m_PhotoManager->GetKryptografEncImage().IsOk();
+    bool kryptoDec1 = m_PhotoManager->GetKryptografDecImage().first.IsOk();
+    bool kryptoDec2 = m_PhotoManager->GetKryptografDecImage().second.IsOk();
+
+    if (stegaEnc || stegaDec || stegaRef)
+    {
+        text.append("met. steganograficzna:\n");
+        if (stegaEnc)
+            text.append(" - obraz Ÿród³owy\n");
+        if (stegaDec)
+            text.append(" - obraz zakodowany\n");
+        if (stegaRef)
+            text.append(" - obraz referencyjny\n");
+    }
+
+    if (kryptoEnc || kryptoDec1 || kryptoDec2)
+    {
+        text.append("met. kryptograficzna:\n");
+        if (kryptoEnc)
+            text.append(" - obraz Ÿród³owy\n");
+        if (kryptoDec1)
+            text.append(" - obraz zakodowany 1\n");
+        if (kryptoDec2)
+            text.append(" - obraz zakodowany 2\n");
+    }
+    return text;
 }

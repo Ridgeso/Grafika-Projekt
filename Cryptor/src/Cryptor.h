@@ -31,7 +31,7 @@ namespace Cryptor
 
 		void SetKryptografEncData(Image newData)
 		{
-			static_cast<Derrived*>(this)->SetRealSteganografEncData(newData);
+			static_cast<Derrived*>(this)->SetRealKryptografEncData(newData);
 		}
 
 		std::pair<const Image, const Image> GetSteganografDecData() const
@@ -103,6 +103,10 @@ namespace Cryptor
 	private:
 
 		bool CheckStegaInputData(const Image& src, const Image& ref) const;
+		bool CheckKryptoInputData(const Image& image1, const Image& image2) const;
+		bool AreDimensionsEqual(const Image& image1, const Image& image2) const;
+		void InsertValueInPos(unsigned y, unsigned x, Image& image, uint8_t value) const;
+		uint8_t GetValueAtPos(unsigned y, unsigned x, const Image& image) const;
 	};
 
 }

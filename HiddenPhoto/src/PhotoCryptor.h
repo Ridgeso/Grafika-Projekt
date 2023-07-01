@@ -2,6 +2,7 @@
 
 #include "Cryptor.h"
 #include "SteganografManager.h"
+#include "KryptografManager.h"
 
 #include <wx/image.h>
 
@@ -23,13 +24,16 @@ namespace PhotoCryptor
 
 		const wxImage& GetSteganografEncImage() const;
 		const wxImage& GetSteganografDecImage() const;
+		const wxImage& GetSteganografRefImage() const { return m_ReferenceSteganografImage; };
 		bool SetSteganografImage(const wxImage& newSteganograf, const wxImage& referenceImage, bool decryptEncrypt = true);
 		bool IsSteganografReady() const { return stegaManager.IsReady(); }
 		
 		const wxImage& GetKryptografEncImage() const;
 		const std::pair<wxImage, wxImage>& GetKryptografDecImage() const;
-		void SetKryptografImage(const wxImage& newKryptograf);
-		void SetKryptografImage(const wxImage& newKryptografFisrt, const wxImage& newKryptografSecond);
+		bool SetKryptografEncryptImage(const wxImage& newKryptograf);
+		bool SetKryptografDecryptImages(const wxImage& newKryptografFisrt, const wxImage& newKryptografSecond);
+		bool IsKryptografEncReady() const { return kryptografManager.IsEncryptionReady(); }
+		bool IsKryptografDecReady() const { return kryptografManager.IsDecryptionReady(); }
 
 	public:
 		std::pair<const Cryptor::Image, const Cryptor::Image> GetRealSteganografEncData() const;
@@ -45,6 +49,8 @@ namespace PhotoCryptor
 		bool IsImageBlackAndWhite(const wxImage& image) const;
 		bool ConvertToBlackAndWhite(wxImage& image, uint8_t threshold) const;
 
+		void Reset();
+
 	private:
 		wxImage m_EncryptSteganografImage;
 		wxImage m_DecryptSteganografImage;
@@ -54,6 +60,7 @@ namespace PhotoCryptor
 		std::pair<wxImage, wxImage> m_DecryptKryptografImage;
 
 		SteganografManager stegaManager;
+		KryptografManager kryptografManager;
 	};
 
 }

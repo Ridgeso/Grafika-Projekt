@@ -28,13 +28,17 @@ private:
     void Repaint(bool mode = false);
     void OpenImage(wxImage* const image, wxString dialogText = "Otwórz plik");
 
+    wxString GetLoadedImagesString();
+
 private:
     enum EntityID
     {
         ID_HiddenPhoto = 1001,
+        ID_ST_EncryptionTypeLabel,
         ID_CB_EncryptDecrypt,
         ID_CO_EncryptionType,
         ID_BT_LoadImage,
+        ID_ST_LoadedImagesLabel,
         ID_BT_StartEncryption,
         ID_BT_SaveToFile,
         ID_P_Picture
@@ -49,19 +53,21 @@ private:
     wxBoxSizer* m_BS_ToolBox;
     wxBoxSizer* m_BS_StartSave;
 
-    wxCheckBox* m_CB_EncryptDecrypt;
+    wxStaticText* m_ST_EncryptionTypeLabel;
     wxComboBox* m_CO_EncryptionType;
+    wxCheckBox* m_CB_EncryptDecrypt;
     wxButton* m_BT_LoadImage;
+    wxStaticText* m_ST_LoadedImagesLabel;
+
     wxButton* m_BT_StartEncryption;
     wxButton* m_BT_SaveToFile;
 
     wxPanel* m_P_Picture;
 
-    wxImage m_SteganoImage;
-    std::array<wxImage, 2> m_KryptoImage;
 
     std::unique_ptr<PhotoCryptor::PhotoManager> m_PhotoManager;
     std::unique_ptr<Cryptor::CryptionManager> m_CryptionManager;
+
 
     static const wxSize s_MinWindowSize;
 };

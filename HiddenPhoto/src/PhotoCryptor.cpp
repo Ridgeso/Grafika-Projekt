@@ -54,14 +54,32 @@ namespace PhotoCryptor
 		return m_DecryptKryptografImage;
 	}
 
-	void PhotoManager::SetKryptografImage(const wxImage& newKryptograf)
+	bool PhotoManager::SetKryptografEncryptImage(const wxImage& newKryptograf)
 	{
 		m_EncryptKryptografImage = newKryptograf;
+		bool imageOk = kryptografManager.SetImageForEncryption(&m_EncryptKryptografImage);
+		if (!imageOk)
+		{
+			kryptografManager.SetDefault();
+			m_EncryptKryptografImage = wxImage();
+			m_DecryptKryptografImage = std::make_pair(wxImage(), wxImage());
+			return false;
+		}
+		return true;
 	}
 
-	void PhotoManager::SetKryptografImage(const wxImage& newKryptografFisrt, const wxImage& newKryptografSecond)
+	bool PhotoManager::SetKryptografDecryptImages(const wxImage& newKryptografFisrt, const wxImage& newKryptografSecond)
 	{
 		m_DecryptKryptografImage = std::make_pair(newKryptografFisrt, newKryptografSecond);
+		bool imagesOk = kryptografManager.SetImagesForDecryption(&m_DecryptKryptografImage.first, &m_DecryptKryptografImage.second);
+		if (!imagesOk)
+		{
+			kryptografManager.SetDefault();
+			m_DecryptKryptografImage = std::make_pair(wxImage(), wxImage());
+			m_EncryptKryptografImage = wxImage();
+			return false;
+		}
+		return true;
 	}
 
 	std::pair<const Cryptor::Image, const Cryptor::Image> PhotoManager::GetRealSteganografEncData() const
@@ -88,13 +106,7 @@ namespace PhotoCryptor
 
 	Cryptor::Image PhotoManager::GetRealKryptografEncData() const
 	{
-		Cryptor::Image image = {
-			m_EncryptKryptografImage.GetWidth(),
-			m_EncryptKryptografImage.GetHeight(),
-			m_EncryptKryptografImage.HasAlpha() ? 4 : 3,
-			m_EncryptKryptografImage.GetData()
-		};
-		return image;
+		return kryptografManager.GetCryptorData();
 	}
 
 	void PhotoManager::SetRealKryptografEncData(Cryptor::Image newData)
@@ -105,19 +117,7 @@ namespace PhotoCryptor
 
 	std::pair<Cryptor::Image, Cryptor::Image> PhotoManager::GetRealKryptografDecData() const
 	{
-		Cryptor::Image imageFirst = {
-			m_DecryptKryptografImage.first.GetWidth(),
-			m_DecryptKryptografImage.first.GetHeight(),
-			m_DecryptKryptografImage.first.HasAlpha() ? 4 : 3,
-			m_DecryptKryptografImage.first.GetData()
-		};
-		Cryptor::Image imageSecond = {
-			m_DecryptKryptografImage.second.GetWidth(),
-			m_DecryptKryptografImage.second.GetHeight(),
-			m_DecryptKryptografImage.second.HasAlpha() ? 4 : 3,
-			m_DecryptKryptografImage.second.GetData()
-		};
-		return std::make_pair(imageFirst, imageSecond);
+		return kryptografManager.GetDecryptorData();
 	}
 
 	void PhotoManager::SetRealKryptografDecData(std::pair<Cryptor::Image, Cryptor::Image> newData)
@@ -160,5 +160,16 @@ namespace PhotoCryptor
 				data[i + j] = newValue;
 		}
 		return true;
+	}
+	void PhotoManager::Reset()
+	{
+		stegaManager.SetDefault();
+		m_EncryptSteganografImage = wxImage();
+		m_DecryptSteganografImage = wxImage();
+		m_ReferenceSteganografImage = wxImage();
+
+		kryptografManager.SetDefault();
+		m_DecryptKryptografImage = std::make_pair(wxImage(), wxImage());
+		m_EncryptKryptografImage = wxImage();
 	}
 }
